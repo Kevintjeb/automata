@@ -1,6 +1,6 @@
-
+package automata;
 /**
- * The class Automata represents both DFA and NDFA: some NDFA's are also DFA
+ * The class automata.Automata represents both DFA and NDFA: some NDFA's are also DFA
  * Using the method isDFA we can check this
  * 
  * We use '$' to denote the empty symbol epsilon
@@ -10,6 +10,7 @@
 
  */
 
+import javax.swing.*;
 import java.util.*;
 
 public class Automata<T extends Comparable>
@@ -100,6 +101,10 @@ public class Automata<T extends Comparable>
         }
         
         return isDFA;
-    }    
-   
+    }
+
+    private DefaultListModel<Object> getToStates(T from, char symbol) {
+        return null;
+    }
+
 }

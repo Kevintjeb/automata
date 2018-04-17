@@ -1,3 +1,4 @@
+package automata;
 
 /**
  * This file shows how to build up some example automata
