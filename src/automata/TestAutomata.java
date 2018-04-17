@@ -8,15 +8,15 @@ package automata;
  */
 public class TestAutomata
 {
-    
-    static public Automata<String> getExampleSlide8Lesson2()
+
+    static public Automata<String> getDFALesson1()
     {
         Character [] alphabet = {'a', 'b'};
         Automata<String> m = new Automata<String>(alphabet);
-        
+
         m.addTransition( new Transition<String> ("q0", 'a', "q1") );
         m.addTransition( new Transition<String> ("q0", 'b', "q4") );
-        
+
         m.addTransition( new Transition<String> ("q1", 'a', "q4") );
         m.addTransition( new Transition<String> ("q1", 'b', "q2") );
 
@@ -32,11 +32,43 @@ public class TestAutomata
 
         // only on start state in a dfa:
         m.defineAsStartState("q0");
-        
+
         // two final states:
         m.defineAsFinalState("q2");
         m.defineAsFinalState("q3");
-        
+
+        return m;
+    }
+
+    static public Automata<String> getNDFALesson1()
+    {
+        Character [] alphabet = {'a', 'b'};
+        Automata<String> m = new Automata<String>(alphabet);
+
+        m.addTransition( new Transition<String> ("q0", 'a', "q1") );
+        m.addTransition( new Transition<String> ("q0", 'a', "q4") );
+        m.addTransition( new Transition<String> ("q0", 'b', "q4") );
+
+        m.addTransition( new Transition<String> ("q1", 'a', "q4") );
+        m.addTransition( new Transition<String> ("q1", 'b', "q2") );
+
+        m.addTransition( new Transition<String> ("q2", 'a', "q3") );
+        m.addTransition( new Transition<String> ("q2", 'b', "q4") );
+
+        m.addTransition( new Transition<String> ("q3", 'a', "q1") );
+        m.addTransition( new Transition<String> ("q3", 'b', "q2") );
+
+        // the error state, loops for a and b:
+        m.addTransition( new Transition<String> ("q4", 'a') );
+        m.addTransition( new Transition<String> ("q4", 'b') );
+
+        // only on start state in a dfa:
+        m.defineAsStartState("q0");
+
+        // two final states:
+        m.defineAsFinalState("q2");
+        m.defineAsFinalState("q3");
+
         return m;
     }
 

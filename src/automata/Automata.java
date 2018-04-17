@@ -10,7 +10,6 @@ package automata;
 
  */
 
-import javax.swing.*;
 import java.util.*;
 
 public class Automata<T extends Comparable>
@@ -26,17 +25,17 @@ public class Automata<T extends Comparable>
 
     public Automata()
     {
-           this(new TreeSet<Character>());
+           this(new TreeSet<>());
     }
     
     public Automata(Character [] s)
     {   
-        this(new TreeSet<Character>(Arrays.asList(s)) );
+        this(new TreeSet<>(Arrays.asList(s)) );
     }
 
     public Automata(SortedSet<Character> symbols)
     {
-        transitions = new TreeSet<Transition<T>>();
+        transitions = new TreeSet<>();
         states = new TreeSet<T>();
         startStates = new TreeSet<T>();
         finalStates = new TreeSet<T>();
@@ -45,7 +44,7 @@ public class Automata<T extends Comparable>
     
     public void setAlphabet(Character [] s)
     {
-        this.setAlphabet(new TreeSet<Character>(Arrays.asList(s)));
+        this.setAlphabet(new TreeSet<>(Arrays.asList(s)));
     }
     
     public void setAlphabet(SortedSet<Character> symbols)
@@ -87,7 +86,7 @@ public class Automata<T extends Comparable>
             System.out.println (t);
         }
     }
-    
+    //Determinite finite automata
     public boolean isDFA()
     {
         boolean isDFA = true;
@@ -96,15 +95,21 @@ public class Automata<T extends Comparable>
         {
             for (char symbol : symbols)
             {
-                isDFA = isDFA && getToStates(from, symbol).size() == 1;
+                isDFA = getToStates(from, symbol) == 1;
+                if(!isDFA)
+                    return isDFA;
             }
         }
         
         return isDFA;
     }
 
-    private DefaultListModel<Object> getToStates(T from, char symbol) {
-        return null;
+    private long getToStates(final T from, final char symbol) {
+        return transitions.stream()
+                .filter(tTransition ->
+                        tTransition.getSymbol() == symbol
+                        && tTransition.getFromState().equals(from))
+                .count();
     }
 
 }
