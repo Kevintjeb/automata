@@ -4,13 +4,10 @@ package automata;
  * Using the method isDFA we can check this
  * 
  * We use '$' to denote the empty symbol epsilon
- * 
- * @author Paul de Mast
- * @version 1.0
-
  */
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Automata<T extends Comparable>
 {
@@ -102,6 +99,61 @@ public class Automata<T extends Comparable>
         }
         
         return isDFA;
+    }
+
+    public boolean isInAlfabet(String input){
+        char[] chars = input.toCharArray();
+        List<Character> charsCollection = new ArrayList<>();
+        for (char c:chars) {
+            charsCollection.add(c);
+        }
+        return symbols.containsAll(charsCollection);
+    }
+
+    public boolean accept(String input) {
+        System.out.println("------------------");
+        System.out.println("Verify : " + input);
+        System.out.println("------------------");
+
+        if(!isInAlfabet(input))
+            return false;
+        char[] chars = input.toCharArray();
+        List<List<Transition<T>>> startStates = this.startStates
+                .stream()
+                .map(this::getTransitions)
+                .collect(Collectors.toList());
+
+        for (List<Transition<T>> startState: startStates) {
+            List<Transition<T>> currentTransitions = startState;
+            for (char c: chars) {
+                Optional<Transition<T>> transitionForSymbol = getTransitionForSymbol(c, currentTransitions);
+                currentTransitions = goToNextState(transitionForSymbol.get());
+            }
+
+            if(finalStates.contains(currentTransitions.get(0).getFromState())){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Optional<Transition<T>> getTransitionForSymbol(char symbol, List<Transition<T>> transitions) {
+        return transitions
+                .stream()
+                .filter(tTransition -> tTransition.getSymbol() == symbol)
+                .findFirst();
+    }
+
+    public List<Transition<T>> getTransitions(T state){
+        return transitions
+                .stream()
+                .filter(tTransition -> tTransition.getFromState().equals(state))
+                .collect(Collectors.toList());
+    }
+
+    public List<Transition<T>> goToNextState(Transition<T> currentState) {
+        return getTransitions(currentState.getToState());
     }
 
     private long getToStates(final T from, final char symbol) {

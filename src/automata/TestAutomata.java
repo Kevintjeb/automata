@@ -14,21 +14,21 @@ public class TestAutomata
         Character [] alphabet = {'a', 'b'};
         Automata<String> m = new Automata<String>(alphabet);
 
-        m.addTransition( new Transition<String> ("q0", 'a', "q1") );
-        m.addTransition( new Transition<String> ("q0", 'b', "q4") );
+        m.addTransition(new Transition<>("q0", 'a', "q1") );
+        m.addTransition(new Transition<>("q0", 'b', "q4") );
 
-        m.addTransition( new Transition<String> ("q1", 'a', "q4") );
-        m.addTransition( new Transition<String> ("q1", 'b', "q2") );
+        m.addTransition(new Transition<>("q1", 'a', "q4") );
+        m.addTransition(new Transition<>("q1", 'b', "q2") );
 
-        m.addTransition( new Transition<String> ("q2", 'a', "q3") );
-        m.addTransition( new Transition<String> ("q2", 'b', "q4") );
+        m.addTransition(new Transition<>("q2", 'a', "q3") );
+        m.addTransition(new Transition<>("q2", 'b', "q4") );
 
-        m.addTransition( new Transition<String> ("q3", 'a', "q1") );
-        m.addTransition( new Transition<String> ("q3", 'b', "q2") );
+        m.addTransition(new Transition<>("q3", 'a', "q1") );
+        m.addTransition(new Transition<>("q3", 'b', "q2") );
 
         // the error state, loops for a and b:
-        m.addTransition( new Transition<String> ("q4", 'a') );
-        m.addTransition( new Transition<String> ("q4", 'b') );
+        m.addTransition(new Transition<>("q4", 'a') );
+        m.addTransition(new Transition<>("q4", 'b') );
 
         // only on start state in a dfa:
         m.defineAsStartState("q0");
@@ -40,27 +40,72 @@ public class TestAutomata
         return m;
     }
 
+    public static Automata<String> getDFAstartAbbOrEndBaaB(){
+        Character [] alphabet = {'a', 'b'};
+        Automata<String> m = new Automata<String>(alphabet);
+
+        m.addTransition(new Transition<>("q0", 'a', "q1") );
+        m.addTransition(new Transition<>("q0", 'b', "q3") );
+
+        m.addTransition(new Transition<>("q1", 'a', "q7") );
+        m.addTransition(new Transition<>("q1", 'b', "q2") );
+
+        m.addTransition(new Transition<>("q2", 'a', "q7") );
+        m.addTransition(new Transition<>("q2", 'b', "q3") );
+
+        m.addTransition(new Transition<>("q3", 'a', "q4") );
+        m.addTransition(new Transition<>("q3", 'b', "q3") );
+
+        m.addTransition(new Transition<>("q4", 'a', "q5") );
+        m.addTransition(new Transition<>("q4", 'b', "q3") );
+
+        m.addTransition(new Transition<>("q5", 'a', "q8") );
+        m.addTransition(new Transition<>("q5", 'b', "q6") );
+
+        m.addTransition(new Transition<>("q6", 'a', "q4"));
+        m.addTransition(new Transition<>("q6", 'b', "q3"));
+
+        m.addTransition(new Transition<>("q7", 'a') );
+        m.addTransition(new Transition<>("q7", 'b', "q3") );
+
+        m.addTransition(new Transition<>("q8", 'a') );
+        m.addTransition(new Transition<>("q8", 'b') );
+
+
+        // only on start state in a dfa:
+        m.defineAsStartState("q0");
+
+        // two final states:
+        m.defineAsFinalState("q3");
+        m.defineAsFinalState("q4");
+        m.defineAsFinalState("q5");
+        m.defineAsFinalState("q6");
+        m.defineAsFinalState("q8");
+
+        return m;
+    }
+
     static public Automata<String> getNDFALesson1()
     {
         Character [] alphabet = {'a', 'b'};
         Automata<String> m = new Automata<String>(alphabet);
 
-        m.addTransition( new Transition<String> ("q0", 'a', "q1") );
-        m.addTransition( new Transition<String> ("q0", 'a', "q4") );
-        m.addTransition( new Transition<String> ("q0", 'b', "q4") );
+        m.addTransition(new Transition<>("q0", 'a', "q1") );
+        m.addTransition(new Transition<>("q0", 'a', "q4") );
+        m.addTransition(new Transition<>("q0", 'b', "q4") );
 
-        m.addTransition( new Transition<String> ("q1", 'a', "q4") );
-        m.addTransition( new Transition<String> ("q1", 'b', "q2") );
+        m.addTransition(new Transition<>("q1", 'a', "q4") );
+        m.addTransition(new Transition<>("q1", 'b', "q2") );
 
-        m.addTransition( new Transition<String> ("q2", 'a', "q3") );
-        m.addTransition( new Transition<String> ("q2", 'b', "q4") );
+        m.addTransition(new Transition<>("q2", 'a', "q3") );
+        m.addTransition(new Transition<>("q2", 'b', "q4") );
 
-        m.addTransition( new Transition<String> ("q3", 'a', "q1") );
-        m.addTransition( new Transition<String> ("q3", 'b', "q2") );
+        m.addTransition(new Transition<>("q3", 'a', "q1") );
+        m.addTransition(new Transition<>("q3", 'b', "q2") );
 
         // the error state, loops for a and b:
-        m.addTransition( new Transition<String> ("q4", 'a') );
-        m.addTransition( new Transition<String> ("q4", 'b') );
+        m.addTransition(new Transition<>("q4", 'a') );
+        m.addTransition(new Transition<>("q4", 'b') );
 
         // only on start state in a dfa:
         m.defineAsStartState("q0");

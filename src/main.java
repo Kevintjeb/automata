@@ -4,6 +4,31 @@ import automata.TestAutomata;
 public class main {
 
     public static void main(String[] args) {
+      testIsDFA();
+      testAcceptInput(TestAutomata.getDFALesson1(),"ababababababa");
+
+      System.out.println(TestAutomata.getDFAstartAbbOrEndBaaB().isDFA());
+      testAcceptInput(TestAutomata.getDFAstartAbbOrEndBaaB(), "ababbbbab");
+        TestAutomata.getDFAstartAbbOrEndBaaB().printTransitions();
+    }
+
+
+    private static void testAcceptInput( Automata automata,String input) {
+        boolean accept = automata.accept(input);
+
+        if(accept){
+            System.out.println("----------------");
+            System.out.println("    ACCEPTED!   ");
+            System.out.println("----------------");
+        }else{
+
+            System.out.println("----------------");
+            System.out.println("     DENIED!    ");
+            System.out.println("----------------");
+        }
+    }
+
+    public static void testIsDFA() {
         System.out.println("Works.");
 
         Automata<String> dfa1 = TestAutomata.getDFALesson1();
@@ -34,5 +59,7 @@ public class main {
 
 
     }
+
+
 
 }
