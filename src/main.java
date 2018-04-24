@@ -4,13 +4,20 @@ import automata.TestAutomata;
 public class main {
 
     public static void main(String[] args) {
-      testIsDFA();
-      testAcceptInput(TestAutomata.getDFALesson1(),"ababababababa");
 
-      System.out.println(TestAutomata.getDFAstartAbbOrEndBaaB().isDFA());
-      testAcceptInput(TestAutomata.getDFAstartAbbOrEndBaaB(), "ababbbbab");
-        TestAutomata.getDFAstartAbbOrEndBaaB().printTransitions();
+        testAcceptInput(TestAutomata.testNDFA(), "abaaa");
+//      testIsDFA();
+//      testAcceptInput(TestAutomata.getDFALesson1(),"ababababababa");
+//
+//      System.out.println(TestAutomata.getDFAstartAbbOrEndBaaB().isDFA());
+//      testAcceptInput(TestAutomata.getDFAstartAbbOrEndBaaB(), "ababbbbab");
+//        TestAutomata.getDFAstartAbbOrEndBaaB().printTransitions();
     }
+
+
+
+
+
 
 
     private static void testAcceptInput( Automata automata,String input) {
