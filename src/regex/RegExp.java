@@ -1,4 +1,4 @@
- 
+package regex;
 
 import java.util.*;
 
@@ -25,6 +25,7 @@ public class RegExp
         else
             {return s1.length() - s2.length();}
         };
+
             
     public RegExp()
     {
