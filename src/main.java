@@ -21,7 +21,6 @@ public class main {
             System.out.println("    ACCEPTED!   ");
             System.out.println("----------------");
         }else{
-
             System.out.println("----------------");
             System.out.println("     DENIED!    ");
             System.out.println("----------------");
@@ -29,8 +28,6 @@ public class main {
     }
 
     public static void testIsDFA() {
-        System.out.println("Works.");
-
         Automata<String> dfa1 = TestAutomata.getDFALesson1();
 
         System.out.println("--------------------");
