@@ -18,7 +18,7 @@ public class Automata<T extends Comparable>
     private SortedSet<T> states;
     private SortedSet<T> startStates;
     private SortedSet<T> finalStates;
-    private SortedSet<Character> symbols;
+    private SortedSet<Character> alphabet;
 
     public Automata()
     {
@@ -30,13 +30,13 @@ public class Automata<T extends Comparable>
         this(new TreeSet<>(Arrays.asList(s)) );
     }
 
-    public Automata(SortedSet<Character> symbols)
+    public Automata(SortedSet<Character> alphabet)
     {
         transitions = new TreeSet<>();
         states = new TreeSet<T>();
         startStates = new TreeSet<T>();
         finalStates = new TreeSet<T>();
-        this.setAlphabet(symbols);
+        this.setAlphabet(alphabet);
     }
     
     public void setAlphabet(Character [] s)
@@ -46,12 +46,16 @@ public class Automata<T extends Comparable>
     
     public void setAlphabet(SortedSet<Character> symbols)
     {
-       this.symbols = symbols;
+       this.alphabet = symbols;
     }
-    
+
+    public void addAlphabetCharacter(char character) {
+        this.alphabet.add(character);
+    }
+
     public SortedSet<Character> getAlphabet()
     {
-       return symbols;
+       return alphabet;
     }
     
     public void addTransition(Transition<T> t)
@@ -90,7 +94,7 @@ public class Automata<T extends Comparable>
         
         for (T from : states)
         {
-            for (char symbol : symbols)
+            for (char symbol : alphabet)
             {
                 isDFA = getToStates(from, symbol) == 1;
                 if(!isDFA)
@@ -107,7 +111,7 @@ public class Automata<T extends Comparable>
         for (char c:chars) {
             charsCollection.add(c);
         }
-        return symbols.containsAll(charsCollection);
+        return alphabet.containsAll(charsCollection);
     }
 
     public boolean accept(String input) {

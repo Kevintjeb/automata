@@ -1,17 +1,29 @@
 import automata.Automata;
 import automata.TestAutomata;
+import regex.RegExp;
+import regex.TestRegExp;
+import regex.Thompson;
 
 public class main {
 
     public static void main(String[] args) {
-      testIsDFA();
-      testAcceptInput(TestAutomata.getDFALesson1(),"ababababababa");
+//      testIsDFA();
+//      testAcceptInput(TestAutomata.getDFALesson1(),"ababababababa");
+//
+//      System.out.println(TestAutomata.getDFAstartAbbOrEndBaaB().isDFA());
+//      testAcceptInput(TestAutomata.getDFAstartAbbOrEndBaaB(), "ababbbbab");
+//        TestAutomata.getDFAstartAbbOrEndBaaB().printTransitions();
+//
+//        TestRegExp testRegExp = new TestRegExp();
+//        testRegExp.testLanguage();
 
-      System.out.println(TestAutomata.getDFAstartAbbOrEndBaaB().isDFA());
-      testAcceptInput(TestAutomata.getDFAstartAbbOrEndBaaB(), "ababbbbab");
-        TestAutomata.getDFAstartAbbOrEndBaaB().printTransitions();
+        Thompson thompson = new Thompson();
+        RegExp a = new RegExp("a");
+        RegExp ab = new RegExp("ab");
+        RegExp star = a.or(ab).star(); //(a|ab)*
+
+        thompson.parseAutomata(new RegExp("ab")).printTransitions();
     }
-
 
     private static void testAcceptInput( Automata automata,String input) {
         boolean accept = automata.accept(input);

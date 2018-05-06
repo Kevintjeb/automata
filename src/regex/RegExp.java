@@ -1,5 +1,7 @@
 package regex;
 
+import automata.Automata;
+
 import java.util.*;
 
 /**
@@ -131,7 +133,11 @@ public class RegExp
                 
             
         return languageResult;
-    }  
+    }
+
+    public Automata toAutomata() {
+        return new Automata<>();
+    }
  
 }
 
