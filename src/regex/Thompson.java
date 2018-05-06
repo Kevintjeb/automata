@@ -59,7 +59,6 @@ public class Thompson {
         Automata<Integer> automata = new Automata<>();
 
         for (char symbol : regex.terminals.toCharArray()) {
-            automata.addTransition(new Transition<>(state, symbol, ++state));
             automata.addAlphabetCharacter(symbol);
         }
         return automata;

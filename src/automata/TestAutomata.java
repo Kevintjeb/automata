@@ -149,5 +149,32 @@ public class TestAutomata
         
         return m;
     }
+
+    static public Automata<String> testNDFA()
+    {
+        Character [] alphabet = {'a', 'b'};
+        Automata<String> m = new Automata<String>(alphabet);
+
+        m.addTransition(new Transition<>("q0", 'a', "q1") );
+        m.addTransition(new Transition<>("q0", 'a', "q2") );
+
+        m.addTransition(new Transition<>("q1", 'b', "q0") );
+
+        m.addTransition(new Transition<>("q2", 'a', "q2") );
+        m.addTransition(new Transition<>("q2", 'a', "q3") );
+
+        m.addTransition(new Transition<>("q3", 'a', "q0") );
+        m.addTransition(new Transition<>("q3", 'b', "q1") );
+        m.addTransition(new Transition<>("q3", 'a', "q3") );
+
+        // only on start state in a dfa:
+        m.defineAsStartState("q0");
+
+        // two final states:
+        m.defineAsFinalState("q0");
+        m.defineAsFinalState("q3");
+
+        return m;
+    }
     
 }

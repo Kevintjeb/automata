@@ -1,22 +1,11 @@
 import automata.Automata;
 import automata.TestAutomata;
 import regex.RegExp;
-import regex.TestRegExp;
 import regex.Thompson;
 
 public class main {
 
     public static void main(String[] args) {
-//      testIsDFA();
-//      testAcceptInput(TestAutomata.getDFALesson1(),"ababababababa");
-//
-//      System.out.println(TestAutomata.getDFAstartAbbOrEndBaaB().isDFA());
-//      testAcceptInput(TestAutomata.getDFAstartAbbOrEndBaaB(), "ababbbbab");
-//        TestAutomata.getDFAstartAbbOrEndBaaB().printTransitions();
-//
-//        TestRegExp testRegExp = new TestRegExp();
-//        testRegExp.testLanguage();
-
         Thompson thompson = new Thompson();
         RegExp a = new RegExp("a");
         RegExp ab = new RegExp("ab");
