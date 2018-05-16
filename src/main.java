@@ -1,17 +1,23 @@
 import automata.Automata;
 import automata.TestAutomata;
 import regex.RegExp;
+import regex.TestRegExp;
 import regex.Thompson;
 
 public class main {
 
     public static void main(String[] args) {
-        Thompson thompson = new Thompson();
-        RegExp a = new RegExp("a");
-        RegExp ab = new RegExp("ab");
-        RegExp star = a.or(ab).star(); //(a|ab)*
+        TestRegExp tRegex = new TestRegExp();
 
-        thompson.parseAutomata(new RegExp("ab")).printTransitions();
+//        RegExp start = tRegex.testThompson();
+
+        RegExp start = tRegex.testThompson2();
+
+        Thompson thompson = new Thompson();
+
+        Automata<Integer> thompsonAutomata = thompson.parseAutomata(start);
+
+        thompsonAutomata.printTransitions();
     }
 
     private static void testAcceptInput( Automata automata,String input) {

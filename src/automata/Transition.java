@@ -14,6 +14,7 @@ public class Transition<T extends Comparable> implements Comparable<Transition<T
 {
 
     public static final char EPSILON = '$';
+    public static final char OTHERAUTOMATA = '%';
     
     private T fromState;
     private char symbol;

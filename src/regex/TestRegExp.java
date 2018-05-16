@@ -40,4 +40,45 @@ public class TestRegExp
         System.out.println("taal van (baa | bb)+:\n" + expr4.getLanguage(5));
         System.out.println("taal van (baa | bb)+ (a|b)*:\n" + expr5.getLanguage(6));
     }
+
+    public RegExp testThompson(){
+        RegExp a = new RegExp("a");
+        RegExp b = new RegExp("b");
+        RegExp c = new RegExp("c");
+        RegExp c2 = new RegExp("c");
+
+        RegExp bStar = b.star();
+
+        RegExp aPlus = a.plus();
+
+        RegExp bStartA = bStar.dot(a);
+
+        RegExp aPlusB = aPlus.dot(b);
+
+        RegExp or = bStartA.or(aPlusB);
+
+        RegExp orStar = or.star();
+
+        RegExp orStarC = orStar.dot(c);
+
+        RegExp beginRegex = c2.dot(orStarC);
+
+        return beginRegex;
+
+
+    }
+
+    public RegExp testThompson2(){
+        RegExp a = new RegExp("a");
+        RegExp a2 = new RegExp("a");
+        RegExp b = new RegExp("b");
+
+        RegExp dot = a.dot(a2);
+
+        RegExp star = dot.star();
+
+        RegExp or = star.or(b);
+
+        return or;
+    }
 }

@@ -38,7 +38,15 @@ public class Automata<T extends Comparable>
         finalStates = new TreeSet<T>();
         this.setAlphabet(alphabet);
     }
-    
+
+    public T getLastFromStates(){
+        return states.last();
+    }
+
+    public T getFinalState(){
+        return finalStates.first();
+    }
+
     public void setAlphabet(Character [] s)
     {
         this.setAlphabet(new TreeSet<>(Arrays.asList(s)));
@@ -87,6 +95,11 @@ public class Automata<T extends Comparable>
             System.out.println (t);
         }
     }
+
+    public Set<Transition<T>> getAllTransitions(){
+        return transitions;
+    }
+
     //Determinite finite automata
     public boolean isDFA()
     {
