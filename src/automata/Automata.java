@@ -230,4 +230,32 @@ public class Automata<T extends Comparable>
         return result;
     }
 
+    public Automata DFAtoNDFA(Automata dfa){
+        Automata ndfa = new Automata();
+
+        //if automata is already NDFA, no convertion needed
+        if(dfa.isDFA()){
+            //convert dfa to ndfa
+        }
+        else{
+            ndfa = dfa;
+        }
+
+        return ndfa;
+    }
+
+    public Automata NDFAtoDFA(Automata ndfa){
+        Automata dfa = new Automata();
+
+        //if automata is already DFA, no convertion needed
+        if(!ndfa.isDFA()){
+            //convert dfa to ndfa
+        }
+        else{
+            dfa = ndfa;
+        }
+
+        return dfa;
+    }
+
 }
