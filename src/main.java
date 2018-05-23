@@ -15,7 +15,7 @@ public class main {
 
         Thompson thompson = new Thompson();
 
-        Automata<Integer> thompsonAutomata = thompson.parseAutomata(start);
+        Automata thompsonAutomata = thompson.parseAutomata(start);
 
         thompsonAutomata.printTransitions();
     }

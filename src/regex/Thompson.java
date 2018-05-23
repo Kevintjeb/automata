@@ -83,6 +83,7 @@ public class Thompson {
                             List<Transition<Integer>> tempTransitionsList = new ArrayList<>();
                             tempTransitionsList.addAll(entry.getKey().getAllTransitions());
                             Iterator<Transition<Integer>> transitionIterator = tempTransitionsList.iterator();
+
                             while(transitionIterator.hasNext()) {
                                 Transition<Integer> trans = transitionIterator.next();
                                 thompsonAutomata.addTransition(new Transition<Integer>(stateNumber + trans.getFromState(), trans.getSymbol(), stateNumber + trans.getToState()));
@@ -155,12 +156,12 @@ public class Thompson {
             automata.addAlphabetCharacter(symbol);
         }
 
-        automata.addTransition( new Transition<Integer> (1, Transition.EPSILON, 2) );
-        automata.addTransition( new Transition<Integer> (2, Transition.OTHERAUTOMATA, 3) );
-        automata.addTransition( new Transition<Integer> (3, Transition.EPSILON, 6) );
-        automata.addTransition( new Transition<Integer> (1, Transition.EPSILON, 4) );
-        automata.addTransition( new Transition<Integer> (4, Transition.OTHERAUTOMATA, 5) );
-        automata.addTransition( new Transition<Integer> (5, Transition.EPSILON, 6) );
+        automata.addTransition(new Transition<>(1, Transition.EPSILON, 2) );
+        automata.addTransition(new Transition<>(2, Transition.OTHERAUTOMATA, 3) );
+        automata.addTransition(new Transition<>(3, Transition.EPSILON, 6) );
+        automata.addTransition(new Transition<>(1, Transition.EPSILON, 4) );
+        automata.addTransition(new Transition<>(4, Transition.OTHERAUTOMATA, 5) );
+        automata.addTransition(new Transition<>(5, Transition.EPSILON, 6) );
 
         automata.defineAsStartState(1);
         automata.defineAsFinalState(6);
