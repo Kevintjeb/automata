@@ -9,6 +9,49 @@ import java.util.SortedSet;
 public class main {
 
     public static void main(String[] args) {
+        System.out.println("TEST THOMPSON AND EPSILON CLOSURE");
+        testThompsonANDEpsilon();
+        System.out.println("");
+
+        System.out.println("TEST DFA TO NDFA");
+        testDFAtoNDFA();
+        System.out.println("");
+    }
+
+    private static void testAcceptInput( Automata automata,String input) {
+        boolean accept = automata.accept(input);
+
+        if(accept){
+            System.out.println("----------------");
+            System.out.println("    ACCEPTED!   ");
+            System.out.println("----------------");
+        }else{
+            System.out.println("----------------");
+            System.out.println("     DENIED!    ");
+            System.out.println("----------------");
+        }
+    }
+
+    public static void testDFAtoNDFA(){
+        System.out.println("----------------");
+        System.out.println("     DFA    ");
+
+        Automata<Integer> dfa = TestAutomata.getDFALesson4();
+        dfa.printTransitions();
+
+        System.out.println("----------------");
+        System.out.println(" ");
+        System.out.println("----------------");
+        System.out.println("    NDFA    ");
+
+        Automata<Integer> ndfa = dfa.DFAtoNDFA();
+        ndfa.printTransitions();
+
+        System.out.println("----------------");
+        System.out.println(" ");
+    }
+
+    public static void testThompsonANDEpsilon(){
         TestRegExp tRegex = new TestRegExp();
 
 //        RegExp start = tRegex.testThompson();
@@ -34,20 +77,6 @@ public class main {
         }
         System.out.println("----------------");
         System.out.println(" ");
-    }
-
-    private static void testAcceptInput( Automata automata,String input) {
-        boolean accept = automata.accept(input);
-
-        if(accept){
-            System.out.println("----------------");
-            System.out.println("    ACCEPTED!   ");
-            System.out.println("----------------");
-        }else{
-            System.out.println("----------------");
-            System.out.println("     DENIED!    ");
-            System.out.println("----------------");
-        }
     }
 
     public static void testIsDFA() {

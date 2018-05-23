@@ -48,6 +48,16 @@ public class Automata<T extends Comparable>
 
     public SortedSet<T> getStartStates(){return startStates;}
 
+    public SortedSet<T> getFinalStates(){ return finalStates;}
+
+    public SortedSet<T> getStates(){ return states;}
+
+    private void setStartStates(SortedSet<T> newStartStates){ startStates = newStartStates;}
+
+    private void setFinalStates(SortedSet<T> newFinalStates){ finalStates = newFinalStates;}
+
+    private void setStates(SortedSet<T> newStates){ states = newStates;}
+
     public T getFinalState(){
         return finalStates.first();
     }
@@ -230,15 +240,27 @@ public class Automata<T extends Comparable>
         return result;
     }
 
-    public Automata DFAtoNDFA(Automata dfa){
+    public Automata DFAtoNDFA(){
         Automata ndfa = new Automata();
 
         //if automata is already NDFA, no convertion needed
-        if(dfa.isDFA()){
-            //convert dfa to ndfa
+        if(isDFA()){
+
+            //convert dfa to ndfa with reverse
+            ndfa.setAlphabet(getAlphabet());
+            ndfa.setStartStates(getFinalStates());
+            ndfa.setFinalStates(getStartStates());
+            ndfa.setStates(getStates());
+
+            //copy transitions reverse
+            Iterator<Transition<T>> transitionIterator = getAllTransitions().iterator();
+            while(transitionIterator.hasNext()) {
+                Transition<T> trans = transitionIterator.next();
+                ndfa.addTransition(new Transition<>(trans.getToState(), trans.getSymbol(), trans.getFromState()));
+            }
         }
         else{
-            ndfa = dfa;
+            ndfa = this;
         }
 
         return ndfa;

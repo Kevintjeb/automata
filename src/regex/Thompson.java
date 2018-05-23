@@ -93,11 +93,11 @@ public class Thompson {
                             Iterator<Transition<Integer>> transitionIterator = tempTransitionsList.iterator();
                             while(transitionIterator.hasNext()) {
                                 Transition<Integer> trans = transitionIterator.next();
-                                thompsonAutomata.addTransition(new Transition<Integer>(stateNumber + trans.getFromState(), trans.getSymbol(), stateNumber + trans.getToState()));
+                                thompsonAutomata.addTransition(new Transition<>(stateNumber + trans.getFromState(), trans.getSymbol(), stateNumber + trans.getToState()));
                             }
 
                             //add the end connection transition with the result automata
-                            thompsonAutomata.addTransition(new Transition<Integer> ((Integer)entry.getKey().getFinalState() + stateNumber, Transition.EPSILON, endState));
+                            thompsonAutomata.addTransition(new Transition<> ((Integer)entry.getKey().getFinalState() + stateNumber, Transition.EPSILON, endState));
 
                             //increment stateNumber
                             stateNumber = stateNumber + (Integer)entry.getKey().getFinalState();
