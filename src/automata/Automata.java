@@ -43,6 +43,8 @@ public class Automata<T extends Comparable>
         return states.last();
     }
 
+    public SortedSet<T> getStartStates(){return startStates;}
+
     public T getFinalState(){
         return finalStates.first();
     }
@@ -179,6 +181,50 @@ public class Automata<T extends Comparable>
                         tTransition.getSymbol() == symbol
                         && tTransition.getFromState().equals(from))
                 .count();
+    }
+
+    public SortedSet<T> deltaE(T state, char symbol){
+        SortedSet<T> result;
+
+        SortedSet<T> startSet = new TreeSet<>();
+        startSet.add(state);
+        result = eClosure(startStates);
+        result = delta(result, symbol);
+        result = eClosure(result);
+
+        return result;
+    }
+
+    private SortedSet<T> eClosure(SortedSet<T> states){
+        SortedSet<T> result = new TreeSet<>();
+
+        for(T s: states){
+            result.add(s);
+            List<Transition<T>> transitionsForS = getTransitions(s);
+            for(Transition<T> t: transitionsForS){
+                if(t.getSymbol() == Transition.EPSILON){
+                    result.add(t.getToState());
+                    SortedSet<T> symbolSet = new TreeSet<>();
+                    symbolSet.add(t.getToState());
+                    result.addAll(eClosure(symbolSet));
+                }
+            }
+        }
+        return result;
+    }
+
+    private SortedSet<T> delta(SortedSet<T> states, char symbol){
+        SortedSet<T> result = new TreeSet<>();
+
+        for(T s: states){
+            List<Transition<T>> transitionsForS = getTransitions(s);
+            for(Transition<T> t: transitionsForS){
+                if(t.getSymbol() == symbol){
+                    result.add(t.getToState());
+                }
+            }
+        }
+        return result;
     }
 
 }

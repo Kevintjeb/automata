@@ -81,4 +81,18 @@ public class TestRegExp
 
         return or;
     }
+
+    public RegExp testThompson3(){
+        RegExp a = new RegExp("a");
+        RegExp a2 = new RegExp("a");
+        RegExp b = new RegExp("b");
+        RegExp b2 = new RegExp("b");
+
+        RegExp dot = b.dot(a);
+        RegExp dot2 = b2.dot(a2);
+
+        RegExp or = dot.or(dot2);
+
+        return or;
+    }
 }

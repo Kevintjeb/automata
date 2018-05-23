@@ -4,6 +4,8 @@ import regex.RegExp;
 import regex.TestRegExp;
 import regex.Thompson;
 
+import java.util.SortedSet;
+
 public class main {
 
     public static void main(String[] args) {
@@ -11,13 +13,27 @@ public class main {
 
 //        RegExp start = tRegex.testThompson();
 
-        RegExp start = tRegex.testThompson2();
+//        RegExp start = tRegex.testThompson2();
+
+        RegExp start = tRegex.testThompson3();
 
         Thompson thompson = new Thompson();
 
         Automata<Integer> thompsonAutomata = thompson.parseAutomata(start);
 
         thompsonAutomata.printTransitions();
+
+        char symbol = 'b';
+        SortedSet<Integer> deltaESet = thompsonAutomata.deltaE(thompsonAutomata.getStartStates().first(), symbol);
+
+        System.out.println(" ");
+        System.out.println("----------------");
+        System.out.println("DeltaE: "+ thompsonAutomata.getStartStates().first() + ", " + symbol);
+        for(Integer i:deltaESet){
+            System.out.println(i);
+        }
+        System.out.println("----------------");
+        System.out.println(" ");
     }
 
     private static void testAcceptInput( Automata automata,String input) {
