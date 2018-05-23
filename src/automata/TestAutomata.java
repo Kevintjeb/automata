@@ -2,12 +2,52 @@ package automata;
 
 /**
  * This file shows how to build up some example automata
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ *
+ * @author Kevin & Rick
+ * @version 1.0
  */
 public class TestAutomata
 {
+
+    static public Automata<Integer> getDFALesson4(){
+        Character[] alphabet = {'a', 'b'};
+        Automata<Integer> dfa = new Automata<>(alphabet);
+
+        dfa.addTransition(new Transition<Integer>(0, 'a'));
+        dfa.addTransition(new Transition<Integer>(0, 'b', 1));
+
+        dfa.addTransition(new Transition<Integer>(1, 'a', 0));
+        dfa.addTransition(new Transition<Integer>(1, 'b', 2));
+
+        dfa.addTransition(new Transition<Integer>(2, 'a', 0));
+        dfa.addTransition(new Transition<Integer>(2, 'b'));
+
+        dfa.defineAsStartState(0);
+
+        dfa.defineAsFinalState(2);
+
+        return dfa;
+    }
+
+    static public Automata<Integer> getNDFALesson4(){
+        Character[] alphabet = {'a', 'b'};
+        Automata<Integer> dfa = new Automata<>(alphabet);
+
+        dfa.addTransition(new Transition<Integer>(0, 'a'));
+        dfa.addTransition(new Transition<Integer>(0, 'a', 1));
+        dfa.addTransition(new Transition<Integer>(0, 'a', 2));
+
+        dfa.addTransition(new Transition<Integer>(1, 'b', 0));
+
+        dfa.addTransition(new Transition<Integer>(2, 'b', 1));
+        dfa.addTransition(new Transition<Integer>(2, 'b'));
+
+        dfa.defineAsStartState(2);
+
+        dfa.defineAsFinalState(0);
+
+        return dfa;
+    }
 
     static public Automata<String> getDFALesson1()
     {

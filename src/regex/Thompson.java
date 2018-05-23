@@ -7,6 +7,14 @@ import javax.swing.text.html.HTMLDocument;
 import java.lang.reflect.Array;
 import java.util.*;
 
+/**
+ * Class to construct the Thompson construction
+ *
+ *
+ * @author Kevin & Rick
+ * @version 1.0
+ */
+
 public class Thompson {
     private Stack<Automata> automataStack = new Stack<>();
 
@@ -86,11 +94,11 @@ public class Thompson {
 
                             while(transitionIterator.hasNext()) {
                                 Transition<Integer> trans = transitionIterator.next();
-                                thompsonAutomata.addTransition(new Transition<Integer>(stateNumber + trans.getFromState(), trans.getSymbol(), stateNumber + trans.getToState()));
+                                thompsonAutomata.addTransition(new Transition<>(stateNumber + trans.getFromState(), trans.getSymbol(), stateNumber + trans.getToState()));
                             }
 
                             //add the end connection transition with the result automata
-                            thompsonAutomata.addTransition(new Transition<Integer> ((Integer)entry.getKey().getFinalState() + stateNumber, Transition.EPSILON, endState));
+                            thompsonAutomata.addTransition(new Transition<> ((Integer)entry.getKey().getFinalState() + stateNumber, Transition.EPSILON, endState));
 
                             //increment stateNumber
                             stateNumber = stateNumber + (Integer)entry.getKey().getFinalState();

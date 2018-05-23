@@ -4,6 +4,9 @@ package automata;
  * Using the method isDFA we can check this
  * 
  * We use '$' to denote the empty symbol epsilon
+ *
+ * @author Kevin & Rick
+ * @version 1.0
  */
 
 import java.util.*;
@@ -42,6 +45,18 @@ public class Automata<T extends Comparable>
     public T getLastFromStates(){
         return states.last();
     }
+
+    public SortedSet<T> getStartStates(){return startStates;}
+
+    public SortedSet<T> getFinalStates(){ return finalStates;}
+
+    public SortedSet<T> getStates(){ return states;}
+
+    private void setStartStates(SortedSet<T> newStartStates){ startStates = newStartStates;}
+
+    private void setFinalStates(SortedSet<T> newFinalStates){ finalStates = newFinalStates;}
+
+    private void setStates(SortedSet<T> newStates){ states = newStates;}
 
     public T getFinalState(){
         return finalStates.first();
@@ -179,6 +194,90 @@ public class Automata<T extends Comparable>
                         tTransition.getSymbol() == symbol
                         && tTransition.getFromState().equals(from))
                 .count();
+    }
+
+    public SortedSet<T> deltaE(T state, char symbol){
+        SortedSet<T> result;
+
+        SortedSet<T> startSet = new TreeSet<>();
+        startSet.add(state);
+        result = eClosure(startStates);
+        result = delta(result, symbol);
+        result = eClosure(result);
+
+        return result;
+    }
+
+    private SortedSet<T> eClosure(SortedSet<T> states){
+        SortedSet<T> result = new TreeSet<>();
+
+        for(T s: states){
+            result.add(s);
+            List<Transition<T>> transitionsForS = getTransitions(s);
+            for(Transition<T> t: transitionsForS){
+                if(t.getSymbol() == Transition.EPSILON){
+                    result.add(t.getToState());
+                    SortedSet<T> symbolSet = new TreeSet<>();
+                    symbolSet.add(t.getToState());
+                    result.addAll(eClosure(symbolSet));
+                }
+            }
+        }
+        return result;
+    }
+
+    private SortedSet<T> delta(SortedSet<T> states, char symbol){
+        SortedSet<T> result = new TreeSet<>();
+
+        for(T s: states){
+            List<Transition<T>> transitionsForS = getTransitions(s);
+            for(Transition<T> t: transitionsForS){
+                if(t.getSymbol() == symbol){
+                    result.add(t.getToState());
+                }
+            }
+        }
+        return result;
+    }
+
+    public Automata DFAtoNDFA(){
+        Automata ndfa = new Automata();
+
+        //if automata is already NDFA, no convertion needed
+        if(isDFA()){
+
+            //convert dfa to ndfa with reverse
+            ndfa.setAlphabet(getAlphabet());
+            ndfa.setStartStates(getFinalStates());
+            ndfa.setFinalStates(getStartStates());
+            ndfa.setStates(getStates());
+
+            //copy transitions reverse
+            Iterator<Transition<T>> transitionIterator = getAllTransitions().iterator();
+            while(transitionIterator.hasNext()) {
+                Transition<T> trans = transitionIterator.next();
+                ndfa.addTransition(new Transition<>(trans.getToState(), trans.getSymbol(), trans.getFromState()));
+            }
+        }
+        else{
+            ndfa = this;
+        }
+
+        return ndfa;
+    }
+
+    public Automata NDFAtoDFA(Automata ndfa){
+        Automata dfa = new Automata();
+
+        //if automata is already DFA, no convertion needed
+        if(!ndfa.isDFA()){
+            //convert dfa to ndfa
+        }
+        else{
+            dfa = ndfa;
+        }
+
+        return dfa;
     }
 
 }

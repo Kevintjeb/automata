@@ -6,7 +6,9 @@ import java.util.*;
 
 /**
  * Voorbeeld class voor het representeren van reguliere expressies
- * 
+ *
+ * @author Kevin & Rick
+ * @version 1.0
  */
 public class RegExp
 {

@@ -2,7 +2,10 @@ package regex;
 
 /**
  * Write a description of class TestRegExp here.
- * 
+ *
+ *
+ * @author Kevin & Rick
+ * @version 1.0
 */
 
 public class TestRegExp
@@ -78,6 +81,20 @@ public class TestRegExp
         RegExp star = dot.star();
 
         RegExp or = star.or(b);
+
+        return or;
+    }
+
+    public RegExp testThompson3(){
+        RegExp a = new RegExp("a");
+        RegExp a2 = new RegExp("a");
+        RegExp b = new RegExp("b");
+        RegExp b2 = new RegExp("b");
+
+        RegExp dot = b.dot(a);
+        RegExp dot2 = b2.dot(a2);
+
+        RegExp or = dot.or(dot2);
 
         return or;
     }
