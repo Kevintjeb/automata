@@ -7,6 +7,14 @@ import javax.swing.text.html.HTMLDocument;
 import java.lang.reflect.Array;
 import java.util.*;
 
+/**
+ * Class to construct the Thompson construction
+ *
+ *
+ * @author Kevin & Rick
+ * @version 1.0
+ */
+
 public class Thompson {
     private Stack<Automata> automataStack = new Stack<>();
 

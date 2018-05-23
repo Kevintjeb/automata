@@ -2,9 +2,9 @@ package automata;
 
 /**
  * This file shows how to build up some example automata
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ *
+ * @author Kevin & Rick
+ * @version 1.0
  */
 public class TestAutomata
 {

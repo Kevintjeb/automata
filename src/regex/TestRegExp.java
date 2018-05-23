@@ -2,7 +2,10 @@ package regex;
 
 /**
  * Write a description of class TestRegExp here.
- * 
+ *
+ *
+ * @author Kevin & Rick
+ * @version 1.0
 */
 
 public class TestRegExp

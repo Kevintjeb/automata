@@ -4,6 +4,9 @@ package automata;
  * Using the method isDFA we can check this
  * 
  * We use '$' to denote the empty symbol epsilon
+ *
+ * @author Kevin & Rick
+ * @version 1.0
  */
 
 import java.util.*;

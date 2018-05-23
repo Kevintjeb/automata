@@ -6,7 +6,7 @@ package automata;
  * 
  * We use '$' to denote the empty symbol epsilon
  * 
- * @author Paul de Mast
+ * @author Kevin & Rick
  * @version 1.0
  */
 
