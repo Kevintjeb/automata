@@ -1,5 +1,6 @@
 import automata.Automata;
 import automata.TestAutomata;
+import fileservice.FileIO;
 import regex.RegExp;
 import regex.TestRegExp;
 import regex.Thompson;
@@ -9,13 +10,14 @@ import java.util.SortedSet;
 public class main {
 
     public static void main(String[] args) {
-        System.out.println("TEST THOMPSON AND EPSILON CLOSURE");
-        testThompsonANDEpsilon();
-        System.out.println("");
-
-        System.out.println("TEST DFA TO NDFA");
-        testDFAtoNDFA();
-        System.out.println("");
+//        System.out.println("TEST THOMPSON AND EPSILON CLOSURE");
+////        testThompsonANDEpsilon();
+////        System.out.println("");
+////
+////        System.out.println("TEST DFA TO NDFA");
+////        testDFAtoNDFA();
+////        System.out.println("");
+        testIsDFA();
     }
 
     private static void testAcceptInput( Automata automata,String input) {
@@ -81,7 +83,7 @@ public class main {
 
     public static void testIsDFA() {
         Automata<String> dfa1 = TestAutomata.getDFALesson1();
-
+        FileIO.writeToFile(dfa1);
         System.out.println("--------------------");
         System.out.println("   DFA lesson 1  ");
         System.out.println("--------------------");
