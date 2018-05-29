@@ -1,0 +1,23 @@
+<html>
+
+<head>
+  <title>Express</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body>
+  <h1>GraphViz generator</h1>
+  <p>Post a .dot file to /graph and a .png will be returned.</p>
+
+
+  <form ref='uploadForm'
+        id='uploadForm'
+        action='http://localhost:3001/graph'
+        method='post'
+        encType="multipart/form-data">
+    <input type="file" name="graph" />
+    <input type='submit' value='Upload!' />
+  </form>
+</body>
+
+</html>
