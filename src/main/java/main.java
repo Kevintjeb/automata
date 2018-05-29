@@ -90,7 +90,7 @@ public class main {
 
     public static void testIsDFA() {
         Automata<String> dfa1 = TestAutomata.getDFALesson1();
-        FileIO.writeToFile(dfa1);
+//        FileIO.writeToFile(dfa1);
         System.out.println("--------------------");
         System.out.println("   DFA lesson 1  ");
         System.out.println("--------------------");
