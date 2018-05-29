@@ -4,18 +4,21 @@ import regex.RegExp;
 import regex.TestRegExp;
 import regex.Thompson;
 
+import java.util.Iterator;
 import java.util.SortedSet;
 
 public class main {
 
     public static void main(String[] args) {
-        System.out.println("TEST THOMPSON AND EPSILON CLOSURE");
-        testThompsonANDEpsilon();
-        System.out.println("");
+//        System.out.println("TEST THOMPSON AND EPSILON CLOSURE");
+//        testThompsonANDEpsilon();
+//        System.out.println("");
+//
+//        System.out.println("TEST DFA TO NDFA");
+//        testDFAtoNDFA();
+//        System.out.println("");
 
-        System.out.println("TEST DFA TO NDFA");
-        testDFAtoNDFA();
-        System.out.println("");
+        testToDFA();
     }
 
     private static void testAcceptInput( Automata automata,String input) {
@@ -30,6 +33,13 @@ public class main {
             System.out.println("     DENIED!    ");
             System.out.println("----------------");
         }
+    }
+
+    public static void testToDFA(){
+        Automata<Integer> ndfa = TestAutomata.testNDFATODFALESSON5();
+
+        Automata<Integer> dfa = ndfa.NDFAtoDFA();
+        dfa.printTransitions();
     }
 
     public static void testDFAtoNDFA(){

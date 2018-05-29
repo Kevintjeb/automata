@@ -216,5 +216,33 @@ public class TestAutomata
 
         return m;
     }
+
+    static public Automata<Integer> testNDFATODFALESSON5(){
+        Character[] alphabet = {'a', 'b'};
+        Automata<Integer> a = new Automata<>(alphabet);
+
+        a.addTransition(new Transition<>(1, 'a', 2));
+        a.addTransition(new Transition<>(1, 'b', 2));
+        a.addTransition(new Transition<>(1, 'b', 3));
+
+        a.addTransition(new Transition<>(2, 'a', 3));
+        a.addTransition(new Transition<>(2, 'b', 4));
+        a.addTransition(new Transition<>(2, Transition.EPSILON, 4));
+
+        a.addTransition(new Transition<>(3, 'a', 2));
+
+        a.addTransition(new Transition<>(4, 'a', 2));
+        a.addTransition(new Transition<>(4, 'a', 5));
+
+        a.addTransition(new Transition<>(5, 'b', 5));
+        a.addTransition(new Transition<>(5, Transition.EPSILON, 3));
+
+        a.defineAsStartState(1);
+
+        a.defineAsFinalState(2);
+        a.defineAsFinalState(3);
+
+        return a;
+    }
     
 }

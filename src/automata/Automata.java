@@ -9,6 +9,7 @@ package automata;
  * @version 1.0
  */
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -201,7 +202,7 @@ public class Automata<T extends Comparable>
 
         SortedSet<T> startSet = new TreeSet<>();
         startSet.add(state);
-        result = eClosure(startStates);
+        result = eClosure(startSet);
         result = delta(result, symbol);
         result = eClosure(result);
 
@@ -266,18 +267,123 @@ public class Automata<T extends Comparable>
         return ndfa;
     }
 
-    public Automata NDFAtoDFA(Automata ndfa){
+    public Automata NDFAtoDFA(){
         Automata dfa = new Automata();
 
         //if automata is already DFA, no convertion needed
-        if(!ndfa.isDFA()){
+        if(!isDFA()){
             //convert dfa to ndfa
+
+            //create table with every state and the reachable states
+            Map<T, ArrayList<SortedSet<T>>> eplisonClosureAllStates = new LinkedHashMap<>();
+
+            //create lookup table
+            for(final Iterator it = getStates().iterator(); it.hasNext();){
+                ArrayList<SortedSet<T>> perState = new ArrayList<>();
+                T state = (T) it.next();
+                for(final Iterator alphabetIt = getAlphabet().iterator(); alphabetIt.hasNext();) {
+                    char symbol = (char) alphabetIt.next();
+                    perState.add(deltaE(state, symbol));
+                }
+                eplisonClosureAllStates.put(state, perState);
+            }
+
+            //create the startstate from all the startstates
+            SortedSet<T> startState = new TreeSet<>();
+            for(final Iterator itStartStates = getStartStates().iterator(); itStartStates.hasNext();){
+                T state = (T) itStartStates.next();
+                SortedSet<T> states = new TreeSet<>();
+                states.add(state);
+                startState.addAll(eClosure(states));
+            }
+
+            //set alphabet
+            dfa.setAlphabet(getAlphabet());
+            //define the firststartstate
+            dfa.defineAsStartState(stateToString(startState));
+
+            //find all transitions
+            Map<SortedSet<T>, ArrayList<SortedSet<T>>> paths = findPaths(startState, eplisonClosureAllStates);
+
+            //create transitions
+            for(Map.Entry<SortedSet<T>, ArrayList<SortedSet<T>>> entry : paths.entrySet()){
+                ArrayList<SortedSet<T>> t = entry.getValue();
+                int counter = 0;
+                for(SortedSet<T> end : t){
+                    int counter2 = 0;
+                    for(final Iterator alphabetIt = getAlphabet().iterator(); alphabetIt.hasNext();) {
+                        char symbol = (char) alphabetIt.next();
+                        if(counter == counter2)
+                        {
+                            dfa.addTransition(new Transition(stateToString(entry.getKey()), symbol , stateToString(end)));
+                            //check if state is a endState and define endState
+                            for(Iterator itEnd = getFinalStates().iterator(); itEnd.hasNext();){
+                                if(entry.getKey().contains(itEnd.next())){
+                                    dfa.defineAsFinalState(stateToString(entry.getKey()));
+                                }
+                            }
+                        }
+                        counter2++;
+                    }
+                    counter++;
+                }
+            }
         }
         else{
-            dfa = ndfa;
+            dfa = this;
         }
 
         return dfa;
     }
+
+    Map<SortedSet<T>, ArrayList<SortedSet<T>>> result = new LinkedHashMap<>();
+    private Map<SortedSet<T>, ArrayList<SortedSet<T>>> findPaths(SortedSet<T> state, Map<T, ArrayList<SortedSet<T>>> lookupTable){
+
+        int counter = 0;
+        ArrayList<SortedSet<T>> paths = new ArrayList<>();
+        for(final Iterator alphabetIt = getAlphabet().iterator(); alphabetIt.hasNext();) {
+            char symbol = (char) alphabetIt.next();
+            paths.add(findPath(state, lookupTable, counter));
+            counter ++;
+        }
+        result.put(state, paths);
+
+        for(SortedSet<T> path: paths){
+            if(!result.containsKey(path)) {
+                result.putAll(findPaths(path, lookupTable));
+            }
+        }
+
+        return result;
+    }
+
+    private SortedSet<T> findPath(SortedSet<T> state, Map<T, ArrayList<SortedSet<T>>> lookupTable, int counter){
+        SortedSet<T> result = new TreeSet<>();
+        for(Iterator it = state.iterator(); it.hasNext();){
+            T s = (T) it.next();
+            for(Map.Entry<T, ArrayList<SortedSet<T>>> entry : lookupTable.entrySet()){
+                if(entry.getKey() == s){
+                    result.addAll(entry.getValue().get(counter));
+                }
+            }
+        }
+
+        return result;
+    }
+
+
+    private String stateToString(SortedSet<T> state){
+        String result = "";
+        for(final Iterator it = state.iterator(); it.hasNext();){
+            T s = (T) it.next();
+            if(it.hasNext()){
+                result += s + ",";
+            } else {
+                result += s;
+            }
+        }
+        return result;
+    }
+
 
 }
