@@ -1,5 +1,8 @@
 digraph g {
 
+rankdir=LR; 
+
+NOTHING [label="", shape=none];
 "q0" [ label = "q0" ]; 
 
 "q1" [ label = "q1" ]; 
@@ -30,5 +33,6 @@ digraph g {
 
 "q4" -> "q4" [ label = "b" ]; 
 
+NOTHING -> "q0";
 
 }
