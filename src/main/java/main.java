@@ -18,10 +18,10 @@ public class main {
 //        testDFAtoNDFA();
 //        System.out.println("");
 
-//        testToDFA();
-//        testToDFAThompsons();
-//        testDenial();
-//        testAnd();
+        testToDFA();
+        testToDFAThompsons();
+        testDenial();
+        testAnd();
         testRegExpEqual();
     }
 
@@ -83,7 +83,7 @@ public class main {
         System.out.println("     DFA    ");
         Automata dfa = ndfa.NDFAtoDFA();
         dfa.printTransitions();
-        FileIO.writeToFile(dfa);
+//        FileIO.writeToFile(dfa);
         System.out.println();
         System.out.println(dfa.getStartStates());
         System.out.println(dfa.getFinalStates());
