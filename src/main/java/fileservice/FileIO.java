@@ -14,7 +14,7 @@ import java.util.SortedSet;
 
 public class FileIO {
     public static String BASE_PATH = "output/";
-    private static String SERVER_URL = "http://127.0.0.1:3001/graph";
+    private static String SERVER_URL = "https://vpn.kevinvandenbroek.nl:3001/graph";
 
     public static void writeToFile(Automata automata) {
         Path automataDot = Paths.get(BASE_PATH + "automataDot.dot");
