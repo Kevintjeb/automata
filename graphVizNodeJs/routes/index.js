@@ -22,6 +22,8 @@ router.post('/graph', (req, res, next) => {
 
     file.name = uuid + '.dot';
 
+    console.log("filename: ",file.name)
+
     file.mv(`./files/${file.name}`, (error) => {
         if (error)
             return res.status(500).send('nope.');
