@@ -3,36 +3,54 @@ digraph g {
 rankdir=LR; 
 
 NOTHING [label="", shape=none];
-"q0" [ label = "q0" ]; 
+"" [ label = "" ]; 
 
-"q1" [ label = "q1" ]; 
+"1" [ label = "1" ]; 
 
-"q2" [ label = "q2" ]; 
+"2,3,4" [ label = "2,3,4" ]; 
 
-"q3" [ label = "q3" ]; 
+"2,3,4,5" [ label = "2,3,4,5" ]; 
 
-"q4" [ label = "q4" ]; 
+"2,4" [ label = "2,4" ]; 
 
-"q0" -> "q1" [ label = "a" ]; 
+"3,4,5" [ label = "3,4,5" ]; 
 
-"q0" -> "q4" [ label = "b" ]; 
+"3,5" [ label = "3,5" ]; 
 
-"q1" -> "q4" [ label = "a" ]; 
+"4" [ label = "4" ]; 
 
-"q1" -> "q2" [ label = "b" ]; 
+"" -> "" [ label = "a" ]; 
 
-"q2" -> "q3" [ label = "a" ]; 
+"" -> "" [ label = "b" ]; 
 
-"q2" -> "q4" [ label = "b" ]; 
+"1" -> "2,4" [ label = "a" ]; 
 
-"q3" -> "q1" [ label = "a" ]; 
+"1" -> "2,3,4" [ label = "b" ]; 
 
-"q3" -> "q2" [ label = "b" ]; 
+"2,3,4" -> "2,3,4,5" [ label = "a" ]; 
 
-"q4" -> "q4" [ label = "a" ]; 
+"2,3,4" -> "4" [ label = "b" ]; 
 
-"q4" -> "q4" [ label = "b" ]; 
+"2,3,4,5" -> "2,3,4,5" [ label = "a" ]; 
 
-NOTHING -> "q0";
+"2,3,4,5" -> "3,4,5" [ label = "b" ]; 
+
+"2,4" -> "2,3,4,5" [ label = "a" ]; 
+
+"2,4" -> "4" [ label = "b" ]; 
+
+"3,4,5" -> "2,3,4,5" [ label = "a" ]; 
+
+"3,4,5" -> "3,5" [ label = "b" ]; 
+
+"3,5" -> "2,4" [ label = "a" ]; 
+
+"3,5" -> "3,5" [ label = "b" ]; 
+
+"4" -> "2,3,4,5" [ label = "a" ]; 
+
+"4" -> "" [ label = "b" ]; 
+
+NOTHING -> "1";
 
 }

@@ -1,5 +1,6 @@
 import automata.Automata;
 import automata.TestAutomata;
+import fileservice.FileIO;
 import regex.RegExp;
 import regex.TestRegExp;
 import regex.Thompson;
@@ -82,6 +83,7 @@ public class main {
         System.out.println("     DFA    ");
         Automata dfa = ndfa.NDFAtoDFA();
         dfa.printTransitions();
+        FileIO.writeToFile(dfa);
         System.out.println();
         System.out.println(dfa.getStartStates());
         System.out.println(dfa.getFinalStates());
