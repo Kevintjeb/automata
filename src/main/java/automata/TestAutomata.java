@@ -244,5 +244,60 @@ public class TestAutomata
 
         return a;
     }
+
+    static public Automata<Integer> testNDFATODFALESSON5_1(){
+        Character[] alphabet = {'a', 'b'};
+        Automata<Integer> a = new Automata<>(alphabet);
+
+        a.addTransition(new Transition<>(0, 'a', 0));
+        a.addTransition(new Transition<>(0, 'a', 1));
+        a.addTransition(new Transition<>(0, 'b', 1));
+
+        a.addTransition(new Transition<>(1, 'a', 2));
+        a.addTransition(new Transition<>(1, 'b', 2));
+
+        a.addTransition(new Transition<>(2, 'a', 0));
+        a.addTransition(new Transition<>(2, 'a', 2));
+
+        a.defineAsStartState(0);
+
+        a.defineAsFinalState(0);
+
+        return a;
+    }
+
+    static public Automata<Integer> testNDFATODFALESSON5_2(){
+        Character[] alphabet = {'a', 'b'};
+        Automata<Integer> a = new Automata<>(alphabet);
+
+        a.addTransition(new Transition<>(0, Transition.EPSILON, 1));
+        a.addTransition(new Transition<>(0, Transition.EPSILON, 7));
+
+        a.addTransition(new Transition<>(1, Transition.EPSILON, 2));
+        a.addTransition(new Transition<>(1, Transition.EPSILON, 4));
+
+        a.addTransition(new Transition<>(2, 'a', 3));
+
+        a.addTransition(new Transition<>(3, Transition.EPSILON, 6));
+
+        a.addTransition(new Transition<>(4, 'b', 5));
+
+        a.addTransition(new Transition<>(5, Transition.EPSILON, 6));
+
+        a.addTransition(new Transition<>(6, Transition.EPSILON, 7));
+        a.addTransition(new Transition<>(6, Transition.EPSILON, 1));
+
+        a.addTransition(new Transition<>(7, 'a', 8));
+
+        a.addTransition(new Transition<>(8, 'b', 9));
+
+        a.addTransition(new Transition<>(9, 'b', 10));
+
+        a.defineAsStartState(0);
+
+        a.defineAsFinalState(10);
+
+        return a;
+    }
     
 }

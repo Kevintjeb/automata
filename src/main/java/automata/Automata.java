@@ -9,7 +9,6 @@ package automata;
  * @version 1.0
  */
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -276,12 +275,13 @@ public class Automata<T extends Comparable>
 
             //create table with every state and the reachable states
             Map<T, ArrayList<SortedSet<T>>> eplisonClosureAllStates = new LinkedHashMap<>();
+            Map<T, Integer> lookupRenameTable = new LinkedHashMap<>();
 
             //create lookup table
             for(final Iterator it = getStates().iterator(); it.hasNext();){
                 ArrayList<SortedSet<T>> perState = new ArrayList<>();
                 T state = (T) it.next();
-                for(final Iterator alphabetIt = getAlphabet().iterator(); alphabetIt.hasNext();) {
+                for (final Iterator alphabetIt = getAlphabet().iterator(); alphabetIt.hasNext(); ) {
                     char symbol = (char) alphabetIt.next();
                     perState.add(deltaE(state, symbol));
                 }
@@ -300,26 +300,29 @@ public class Automata<T extends Comparable>
             //set alphabet
             dfa.setAlphabet(getAlphabet());
             //define the firststartstate
-            dfa.defineAsStartState(stateToString(startState));
+            dfa.defineAsStartState(renameState((T) stateToString(startState), lookupRenameTable));
 
             //find all transitions
             Map<SortedSet<T>, ArrayList<SortedSet<T>>> paths = findPaths(startState, eplisonClosureAllStates);
 
             //create transitions
+            //foreach state
             for(Map.Entry<SortedSet<T>, ArrayList<SortedSet<T>>> entry : paths.entrySet()){
                 ArrayList<SortedSet<T>> t = entry.getValue();
                 int counter = 0;
+                //foreach arraylist, so foreach symbol
                 for(SortedSet<T> end : t){
                     int counter2 = 0;
+                    //foreach symbol in alphabet. Find the matching symbol from the arraylist with the symbol of the alphabet
                     for(final Iterator alphabetIt = getAlphabet().iterator(); alphabetIt.hasNext();) {
                         char symbol = (char) alphabetIt.next();
-                        if(counter == counter2)
+                        if(counter == counter2) //if both symbols matches
                         {
-                            dfa.addTransition(new Transition(stateToString(entry.getKey()), symbol , stateToString(end)));
+                            dfa.addTransition(new Transition(renameState((T) stateToString(entry.getKey()), lookupRenameTable), symbol , renameState((T)stateToString(end), lookupRenameTable)));
                             //check if state is a endState and define endState
                             for(Iterator itEnd = getFinalStates().iterator(); itEnd.hasNext();){
                                 if(entry.getKey().contains(itEnd.next())){
-                                    dfa.defineAsFinalState(stateToString(entry.getKey()));
+                                    dfa.defineAsFinalState(renameState((T)stateToString(entry.getKey()), lookupRenameTable));
                                 }
                             }
                         }
@@ -373,16 +376,76 @@ public class Automata<T extends Comparable>
 
 
     private String stateToString(SortedSet<T> state){
-        String result = "";
+        String result = "[";
         for(final Iterator it = state.iterator(); it.hasNext();){
             T s = (T) it.next();
             if(it.hasNext()){
                 result += s + ",";
             } else {
-                result += s;
+                result += s + "]";
             }
         }
         return result;
+    }
+
+    public Automata brzozowski(){
+        if(isDFA()){
+//            Automata n = DFAtoNDFA();
+//            n.printTransitions();
+//            System.out.println();
+//            System.out.println(n.getStartStates());
+//            System.out.println(n.getStates());
+//            System.out.println(n.getFinalStates());
+//            System.out.println();
+//
+//            Automata d = n.NDFAtoDFA();
+//            d.printTransitions();
+//            System.out.println();
+//            System.out.println(d.getStartStates());
+//            System.out.println(d.getStates());
+//            System.out.println(d.getFinalStates());
+//            System.out.println();
+//
+//            Automata nd = d.DFAtoNDFA();
+//            nd.printTransitions();
+//            System.out.println();
+//            System.out.println(nd.getStartStates());
+//            System.out.println(nd.getStates());
+//            System.out.println(nd.getFinalStates());
+//            System.out.println();
+//
+//            Automata dfa = nd.NDFAtoDFA();
+//            dfa.printTransitions();
+//            System.out.println();
+//            System.out.println(dfa.getStartStates());
+//            System.out.println(dfa.getStates());
+//            System.out.println(dfa.getFinalStates());
+//            System.out.println();
+//            return dfa;
+            return DFAtoNDFA().NDFAtoDFA().DFAtoNDFA().NDFAtoDFA();
+        } else {
+            return NDFAtoDFA().DFAtoNDFA().NDFAtoDFA().DFAtoNDFA().NDFAtoDFA();
+        }
+    }
+
+    private Integer renameState(T state, Map<T, Integer> lookupTable){
+        if(!lookupTable.containsKey(state)){
+            //rename state
+            Collection<Integer> values = lookupTable.values();
+            int newValue = 0;
+            if(values.size() > 0) {
+                int lastValue = (int) values.toArray()[values.size() - 1];
+                newValue = lastValue+1;
+                lookupTable.put(state, newValue);
+                return newValue;
+            } else {
+                //no values in the map
+                lookupTable.put(state, newValue);
+                return newValue;
+            }
+        } else {
+            return lookupTable.get(state);
+        }
     }
 
 

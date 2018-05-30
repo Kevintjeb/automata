@@ -18,6 +18,7 @@ public class main {
 //        System.out.println("");
 
         testToDFA();
+//        testToDFAThompsons();
     }
 
     private static void testAcceptInput( Automata automata,String input) {
@@ -35,10 +36,62 @@ public class main {
     }
 
     public static void testToDFA(){
+        System.out.println("----------------");
+        System.out.println("    NDFA    ");
         Automata<Integer> ndfa = TestAutomata.testNDFATODFALESSON5();
+        ndfa.printTransitions();
+        System.out.println();
+        System.out.println(ndfa.getStartStates());
+        System.out.println(ndfa.getFinalStates());
+        System.out.println();
 
-        Automata<Integer> dfa = ndfa.NDFAtoDFA();
+        System.out.println("----------------");
+        System.out.println("     DFA    ");
+        Automata dfa = ndfa.NDFAtoDFA();
         dfa.printTransitions();
+        System.out.println();
+        System.out.println(dfa.getStartStates());
+        System.out.println(dfa.getFinalStates());
+        System.out.println();
+
+        System.out.println("----------------");
+        System.out.println("   Brzozowski   ");
+        Automata simpleDfa = dfa.brzozowski();
+        simpleDfa.printTransitions();
+        System.out.println();
+    }
+
+    public static void testToDFAThompsons(){
+        System.out.println("----------------");
+        System.out.println("    NDFA    ");
+        TestRegExp tRegex = new TestRegExp();
+        RegExp start = tRegex.testThompson4();
+
+        Thompson thompson = new Thompson();
+        Automata<Integer> ndfa = thompson.parseAutomata(start);
+        ndfa.printTransitions();
+        System.out.println();
+        System.out.println(ndfa.getStartStates());
+        System.out.println(ndfa.getFinalStates());
+        System.out.println();
+
+        System.out.println("----------------");
+        System.out.println("     DFA    ");
+        Automata dfa = ndfa.NDFAtoDFA();
+        dfa.printTransitions();
+        System.out.println();
+        System.out.println(dfa.getStartStates());
+        System.out.println(dfa.getFinalStates());
+        System.out.println();
+
+        System.out.println("----------------");
+        System.out.println("    SDFA    ");
+        Automata simpleDfa = dfa.brzozowski();
+        simpleDfa.printTransitions();
+        System.out.println();
+        System.out.println(simpleDfa.getStartStates());
+        System.out.println(simpleDfa.getFinalStates());
+        System.out.println();
     }
 
     public static void testDFAtoNDFA(){
