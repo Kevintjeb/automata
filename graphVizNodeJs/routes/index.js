@@ -28,6 +28,10 @@ router.post('/graph', (req, res, next) => {
 
         exec(`.\\graphviz\\Graphviz2.38\\bin\\dot.exe -Tpng png -O ${uuid}.png ./files/${file.name}`, (err, stdout, stderr) => {
             const filepath = `./files/${file.name}.png`;
+
+            console.log(stdout);
+            console.log(stderr);
+
             fs.exists(filepath , function(exists){
                 if (exists) {
                     res.writeHead(200, {

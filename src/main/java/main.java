@@ -1,5 +1,6 @@
 import automata.Automata;
 import automata.TestAutomata;
+import fileservice.FileIO;
 import regex.RegExp;
 import regex.TestRegExp;
 import regex.Thompson;
@@ -38,6 +39,7 @@ public class main {
         Automata<Integer> ndfa = TestAutomata.testNDFATODFALESSON5();
 
         Automata<Integer> dfa = ndfa.NDFAtoDFA();
+        FileIO.writeToFile(dfa);
         dfa.printTransitions();
     }
 
