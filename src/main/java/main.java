@@ -17,8 +17,11 @@ public class main {
 //        testDFAtoNDFA();
 //        System.out.println("");
 
-        testToDFA();
+//        testToDFA();
 //        testToDFAThompsons();
+//        testDenial();
+//        testAnd();
+        testRegExpEqual();
     }
 
     private static void testAcceptInput( Automata automata,String input) {
@@ -116,11 +119,11 @@ public class main {
     public static void testThompsonANDEpsilon(){
         TestRegExp tRegex = new TestRegExp();
 
-//        RegExp start = tRegex.testThompson();
+        RegExp start = tRegex.testThompson();
 
 //        RegExp start = tRegex.testThompson2();
-
-        RegExp start = tRegex.testThompson3();
+//
+//        RegExp start = tRegex.testThompson3();
 
         Thompson thompson = new Thompson();
 
@@ -169,6 +172,61 @@ public class main {
         exampleSlide14Lesson2.printTransitions();
 
 
+    }
+
+    public static void testDenial(){
+        Automata<String> dfa = TestAutomata.getDFALesson1();
+        dfa.printInfo();
+
+        System.out.println();
+
+        Automata notDfa = dfa.denial();
+        notDfa.printInfo();
+    }
+
+    public static void testAnd(){
+        Automata dfa1 = TestAutomata.L1();
+        Automata dfa2 = TestAutomata.L2();
+
+        Automata result = dfa1.and(dfa2);
+        result.printInfo();
+        Automata result2 = dfa1.or(dfa2);
+        result2.printInfo();
+    }
+
+    public static void testRegExpEqual(){
+        TestRegExp tRegex = new TestRegExp();
+        RegExp r1 = tRegex.regexEqual1();
+        RegExp r2 = tRegex.regexEqual2();
+
+        boolean result = r1.equals(r2);
+
+        System.out.println("r1 == r2: " + result);
+    }
+
+
+    //mainmethod for the assessment
+    public static void Assessment(){
+        //TEST DFA
+        System.out.println("----------------------");
+        System.out.println("--      3 DFA's     --");
+        //TODO Add 3 DFA's
+        System.out.println("----------------------");
+        System.out.println();
+
+        //Test NDFA
+        System.out.println("----------------------");
+        System.out.println("--      3 NDFA's    --");
+        //TODO add 3 NDFA's
+        System.out.println("----------------------");
+        System.out.println();
+
+        //Test RegExp
+        System.out.println("----------------------");
+        System.out.println("--     3 RegExp     --");
+        //TODO add 3 RegExp
+        System.out.println("----------------------");
+        System.out.println();
     }
 
 

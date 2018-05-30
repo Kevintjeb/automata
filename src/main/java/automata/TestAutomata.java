@@ -299,5 +299,46 @@ public class TestAutomata
 
         return a;
     }
+
+    static public Automata<Integer> L1(){
+        Character[] alphabet = {'a', 'b'};
+        Automata<Integer> a = new Automata<>(alphabet);
+
+        a.addTransition(new Transition<>(1, 'a', 2));
+        a.addTransition(new Transition<>(1, 'b', 1));
+
+        a.addTransition(new Transition<>(2, 'a', 1));
+        a.addTransition(new Transition<>(2, 'b', 2));
+
+        a.defineAsStartState(1);
+
+        a.defineAsFinalState(1);
+
+        return a;
+    }
+
+    static public Automata<Integer> L2(){
+        Character[] alphabet = {'a', 'b'};
+        Automata<Integer> a = new Automata<>(alphabet);
+
+        a.addTransition(new Transition<>(1, 'a', 1));
+        a.addTransition(new Transition<>(1, 'b', 2));
+
+        a.addTransition(new Transition<>(2, 'a', 1));
+        a.addTransition(new Transition<>(2, 'b', 3));
+
+        a.addTransition(new Transition<>(3, 'a', 1));
+        a.addTransition(new Transition<>(3, 'b', 4));
+
+        a.addTransition(new Transition<>(4, 'a', 4));
+        a.addTransition(new Transition<>(4, 'b', 4));
+
+        a.defineAsStartState(1);
+
+        a.defineAsFinalState(1);
+        a.defineAsFinalState(2);
+
+        return a;
+    }
     
 }
