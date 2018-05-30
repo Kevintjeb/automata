@@ -24,12 +24,14 @@ router.post('/graph', (req, res, next) => {
 
     console.log("filename: ",file.name)
 
-    file.mv(`./files/${file.name}`, (error) => {
+    file.name = "temp.dot";
+
+    file.mv(`./files/temp.dot`, (error) => {
         if (error)
             return res.status(500).send('nope.');
 
-        exec(`./graphviz/Graphviz2.38/bin/dot.exe -Tpng png -O ${uuid}.png ./files/${file.name}`, (err, stdout, stderr) => {
-            const filepath = `./files/${file.name}.png`;
+        exec(`./graphviz/Graphviz2.38/bin/dot.exe -Tpng png -O temp.dot.png ./files/temp.dor`, (err, stdout, stderr) => {
+            const filepath = `./files/temp.dot.png`;
 
             console.log(stdout);
             console.log(stderr);
