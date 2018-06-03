@@ -14,6 +14,8 @@ RUN apk add --update --no-cache \
            graphviz \
            ttf-freefont
 
+RUN mkdir /files
+
 # Bundle app source
 COPY . .
 
