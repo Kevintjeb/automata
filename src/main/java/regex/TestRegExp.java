@@ -98,4 +98,129 @@ public class TestRegExp
 
         return or;
     }
+
+    public RegExp testThompson4(){
+        RegExp a = new RegExp("a");
+        RegExp a2 = new RegExp("a");
+        RegExp b = new RegExp("b");
+        RegExp b2 = new RegExp("b");
+        RegExp b3 = new RegExp("b");
+
+        RegExp or = a.or(b);
+        RegExp star = or.star();
+
+
+        RegExp dot1 = star.dot(a2);
+        RegExp dot2 = dot1.dot(b2);
+        RegExp dot3 = dot2.dot(b3);
+
+
+        return dot3;
+    }
+
+    public RegExp regexEqual1(){
+        //leftside of dot
+        RegExp a = new RegExp("a");
+        RegExp starA = a.star();
+
+        RegExp b = new RegExp("b");
+        RegExp starB = b.star();
+
+        RegExp starADOTStarB = starA.dot(starB);
+        RegExp plusleft =  starADOTStarB.plus();
+
+        //rightside of dot
+        //leftside of OR
+        RegExp b2 = new RegExp("b");
+        RegExp b2Star = b2.star();
+
+        RegExp b3 = new RegExp("b");
+        RegExp b2Starb3 = b2Star.dot(b3);
+
+        RegExp b4 = new RegExp("b");
+        RegExp b4DOTb2Starb3 = b4.dot(b2Starb3);
+
+        //rightside of OR
+        RegExp a2 = new RegExp("a");
+        RegExp a3 = new RegExp("a");
+
+        RegExp a2DOTa3 = a2.dot(a3);
+        RegExp b5 = new RegExp("b");
+        RegExp b5DOTa2DOTa3 = b5.dot(a2DOTa3);
+
+        RegExp b6 = new RegExp("b");
+        RegExp starB6 = b6.star();
+
+        RegExp starb6DOTb5enz = starB6.dot(b5DOTa2DOTa3);
+
+        RegExp a4 = new RegExp("a");
+        RegExp a4DOTenz = a4.dot(starb6DOTb5enz);
+
+        RegExp or = b4DOTb2Starb3.or(a4DOTenz);
+
+        RegExp plusright = or.plus();
+
+        RegExp MainDOT = plusleft.dot(plusright);
+
+        return MainDOT;
+
+    }
+
+    public RegExp regexEqual2(){
+        //left of dot
+        RegExp a = new RegExp("a");
+        RegExp b = new RegExp("b");
+        RegExp aORb = a.or(b);
+        RegExp leftStar = aORb.star();
+
+        //right of DOT
+        //left of Dot
+        //left of OR
+        RegExp b2 = new RegExp("b");
+        RegExp b2plus = b2.plus();
+        RegExp b3 = new RegExp("b");
+        RegExp b2plusDotb3 = b2plus.dot(b3);
+
+        //right of OR
+        RegExp a2 = new RegExp("a");
+        RegExp a3 = new RegExp("a");
+        RegExp a2DOTa3 = a2.dot(a3);
+        RegExp b4 = new RegExp("b");
+        RegExp b4DOTa2DOTa3 = b4.dot(a2DOTa3);
+
+        RegExp b5 = new RegExp("b");
+        RegExp b5Star = b5.star();
+
+        RegExp b5StarDOTb4DOTa2DOTa3 = b5Star.dot(b4DOTa2DOTa3);
+        RegExp a4 = new RegExp("a");
+        RegExp a4DOTb5St = a4.dot(b5StarDOTb4DOTa2DOTa3);
+
+        RegExp OR = b2plusDotb3.or(a4DOTb5St);
+
+        //right of DOT
+        RegExp a5 = new RegExp("a");
+        RegExp a6 = new RegExp("a");
+        RegExp a5DOTa6 = a5.dot(a6);
+
+        RegExp b6 = new RegExp("b");
+        RegExp b6Plus = b6.plus();
+        RegExp b6plusDOTa5DOTa6 = b6Plus.dot(a5DOTa6);
+
+        RegExp a7 = new RegExp("a");
+        RegExp a7Dotb6p = a7.dot(b6plusDOTa5DOTa6);
+
+        RegExp b7 = new RegExp("b");
+        RegExp b7plus = b7.plus();
+        RegExp b8 = new RegExp("b");
+        RegExp b8DOTb7plus = b8.dot(b7plus);
+
+        RegExp OR2 = a7Dotb6p.or(b8DOTb7plus);
+        RegExp starOR2 = OR2.star();
+
+        RegExp dot = OR.dot(starOR2);
+
+        RegExp mainDOT = leftStar.dot(dot);
+
+        return mainDOT;
+    }
 }

@@ -140,6 +140,31 @@ public class RegExp
     public Automata toAutomata() {
         return new Automata<>();
     }
+
+    public boolean equals(RegExp r2){
+        Thompson thompson = new Thompson();
+        Thompson thompson2 = new Thompson();
+
+        Automata a1 = thompson.parseAutomata(this);
+        Automata a2 = thompson2.parseAutomata(r2);
+
+        Automata dfa1 = a1.NDFAtoDFA();
+        Automata dfa2 = a2.NDFAtoDFA();
+
+        Automata optA1 = dfa1.brzozowski();
+        Automata optA2 = dfa2.brzozowski();
+
+        Automata NotOptA2 = optA2.denial();
+
+        Automata a3 = optA1.and(NotOptA2);
+
+        Automata result = a3.brzozowski();
+
+        if(result.getFinalStates().size() == 0)
+            return true;
+        else
+            return false;
+    }
  
 }
 
