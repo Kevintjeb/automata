@@ -10,9 +10,9 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN apk add --update --no-cache \
-           graphviz \
-           ttf-freefont
+RUN apt update
+RUN apt install --yes graphviz
+
 
 RUN mkdir /files
 RUN echo test > /files/test.txt
