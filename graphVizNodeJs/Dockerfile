@@ -15,6 +15,7 @@ RUN apk add --update --no-cache \
            ttf-freefont
 
 RUN mkdir /files
+RUN echo test > /files/test.txt
 
 # Bundle app source
 COPY . .
