@@ -1,4 +1,4 @@
-FROM node:9.11.1
+FROM 9.11.1-alpine
 
 # Create app directory
 WORKDIR /app
@@ -9,6 +9,10 @@ WORKDIR /app
 COPY package*.json ./
 
 RUN npm install
+
+RUN apk add --update --no-cache \
+           graphviz \
+           ttf-freefont
 
 # Bundle app source
 COPY . .
