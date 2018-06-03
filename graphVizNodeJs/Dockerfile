@@ -14,8 +14,7 @@ RUN apt update
 RUN apt install --yes graphviz
 
 
-RUN mkdir /files
-RUN echo test > /files/test.txt
+RUN mkdir /app/files
 
 # Bundle app source
 COPY . .
