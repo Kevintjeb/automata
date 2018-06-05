@@ -1,5 +1,7 @@
 package automata;
 
+import reggram.RegGram;
+
 /**
  * This file shows how to build up some example automata
  *
@@ -339,6 +341,39 @@ public class TestAutomata
         a.defineAsFinalState(2);
 
         return a;
+    }
+
+    static public RegGram ndfaToRegGram(){
+        Character[] alphabet = {'a', 'b'};
+        Automata<Integer> ndfa = new Automata<>(alphabet);
+
+        ndfa.addTransition(new Transition<>(0, 'a', 0));
+        ndfa.addTransition(new Transition<>(0, 'a', 1));
+        ndfa.addTransition(new Transition<>(0, 'b', 0));
+        ndfa.addTransition(new Transition<>(0, 'b', 3));
+
+        ndfa.addTransition(new Transition<>(1, 'a', 2));
+
+        ndfa.addTransition(new Transition<>(2, 'a', 2));
+        ndfa.addTransition(new Transition<>(2, 'b', 2));
+
+        ndfa.addTransition(new Transition<>(3, 'b', 4));
+
+        ndfa.addTransition(new Transition<>(4, 'a', 4));
+        ndfa.addTransition(new Transition<>(4, 'b', 4));
+
+        ndfa.defineAsStartState(0);
+        ndfa.defineAsFinalState(2);
+        ndfa.defineAsFinalState(4);
+        ndfa.printInfo();
+
+        RegGram regGram = ndfa.toRegGramm();
+        regGram.printInfo();
+
+        Automata ndfa2 = regGram.toNDFA();
+        ndfa2.printInfo();
+
+        return regGram;
     }
     
 }

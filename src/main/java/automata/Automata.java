@@ -9,6 +9,10 @@ package automata;
  * @version 1.0
  */
 
+import reggram.RegGram;
+import reggram.TransitionGram;
+
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -425,6 +429,168 @@ public class Automata<T extends Comparable>
         }
     }
 
+    public Automata hopcroft(){
+        if(isDFA()){
+            //create the first table with states and finalstates
+            List<Map<T, List<Integer>>> table = new ArrayList<>();
+            SortedSet notFinalStates = new TreeSet<>(this.states);
+            notFinalStates.removeAll(this.finalStates);
+
+            Map<T, List<Integer>> notFinalStateMap = new HashMap<>();
+            for(Object state: notFinalStates){
+                ArrayList<Integer> toStateForThisState = new ArrayList<>();
+                for(char c : getAlphabet()){
+                    T toState = toState(this, (T) state, c);
+                    if(notFinalStates.contains(toState)){
+                        toStateForThisState.add(0);
+                    } else {
+                        toStateForThisState.add(1);
+                    }
+                }
+                notFinalStateMap.put((T)state, toStateForThisState);
+
+            }
+
+            Map<T, List<Integer>> FinalStateMap = new HashMap<>();
+            for(Object state: finalStates){
+                ArrayList<Integer> toStateForThisState = new ArrayList<>();
+                for(char c : getAlphabet()){
+                    T toState = toState(this, (T) state, c);
+                    if(finalStates.contains(toState)){
+                        toStateForThisState.add(1);
+                    } else {
+                        toStateForThisState.add(0);
+                    }
+                }
+                FinalStateMap.put((T)state, toStateForThisState);
+            }
+
+            table.add(notFinalStateMap);
+            table.add(FinalStateMap);
+
+            //get recursive the minimunTable
+            List<Map<T, List<Integer>>> minimunTable = hopcroftRecursive(table);
+
+            //translate the minimuntable to an Automata
+            Automata result = new Automata(getAlphabet());
+            int blokNumber = 0;
+            for(Map<T, List<Integer>> blok : minimunTable){
+                for(Map.Entry<T, List<Integer>> state : blok.entrySet()){
+                    int charNumber = 0;
+                    for(char c : getAlphabet()){
+                        result.addTransition(new Transition<>(blokNumber, c, state.getValue().get(charNumber)));
+                        if(finalStates.contains(state.getKey())){
+                            result.defineAsFinalState(blokNumber);
+                        }
+                        if(startStates.contains(state.getKey())){
+                            result.defineAsStartState(blokNumber);
+                        }
+                        charNumber++;
+                    }
+                }
+                blokNumber++;
+            }
+
+            return result;
+
+        } else {
+            return NDFAtoDFA().hopcroft();
+        }
+    }
+
+    private List<Map<T, List<Integer>>> hopcroftRecursive(List<Map<T, List<Integer>>> table){
+        if(checkHopcroftTable(table)){ //check if the table is the minimun table //stopcondition
+            return table;
+        } else {
+            List<Map<T, List<Integer>>> newTable = new ArrayList<>(); //new table for the minimuntable
+
+            for(Map<T, List<Integer>> blok : table){ //foreach blok in the table
+                List<Map<T, List<Integer>>> newBloks = new ArrayList<>(); //create new table for this blok so not equal row can be added to this new table
+                List<Integer> firstValues = new ArrayList<>();
+                for(Map.Entry<T, List<Integer>> entry : blok.entrySet()) { //every row / blok
+                    if(firstValues.size() < 1){ //if this is the first row of the blok
+                        Map<T, List<Integer>> newBlok = new HashMap<>(); //add this row in the new table for this blok
+                        newBlok.put(entry.getKey(), entry.getValue());
+                        newBloks.add(newBlok);
+                        firstValues = entry.getValue();
+                    } else { //not the first row of the blok so check for equal rows
+                        boolean theSame = false;
+                        for(Map<T, List<Integer>> b :  newBloks){ //foreach blok in the new table for this blok
+                            for(Map.Entry<T, List<Integer>> e : b.entrySet()) { //foreach row in the blok
+                                int counter = 0;
+                                for(Integer v : e.getValue()){  //get for all the characters of the alphabet the value
+                                    if(v == entry.getValue().get(counter)){ //and check this with the entry, which has to put into a current blok or new blok
+                                        theSame = true;
+                                    } else { theSame = false; break; } //two values at one character are not the same so the two rows are not the same and break
+                                    counter++;
+                                }
+
+                                if(theSame){ //entry and the row are the same, so add the entry to the blok of the row
+                                    b.put(entry.getKey(), entry.getValue());
+                                    theSame = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(!theSame){ // the entry is not equal to a row in the new bloks, so add a new blok
+                            Map<T, List<Integer>> newBlok = new HashMap<>();
+                            newBlok.put(entry.getKey(), entry.getValue());
+                            newBloks.add(newBlok);
+                        }
+                    }
+                }
+
+                newTable.addAll(newBloks); //add all the new bloks for this blok to the new table
+            }
+
+            //find for the new table the right toStates, so the table will contain blok and foreach character the to blok.
+            for(Map<T, List<Integer>> blok : newTable){ //foreach blok
+                for(Map.Entry<T, List<Integer>> entry : blok.entrySet()){ //for each row in the blok
+                    List<Integer> toStates = new ArrayList<>();
+                    for(char c : getAlphabet()){ //foreach character in the alphabet
+                        T toState = toState(this, entry.getKey(), c); //get the toState
+                        int blokNumber = 0;
+                        outerloop:
+                        for(Map<T, List<Integer>> b : newTable){                    //find for the toState, the blokNumber of this state
+                            for(Map.Entry<T, List<Integer>> e : b.entrySet()){      //
+                                if(toState == e.getKey()){                          //
+                                    break outerloop;                                //
+                                }
+                            }
+                            blokNumber++;
+                        }
+                        toStates.add(blokNumber);                                   // add this blokNumber to the list for this row
+                    }
+                    entry.setValue(toStates); //add the list with to blokNumbers as the value of the map
+                }
+            }
+
+            return hopcroftRecursive(newTable); //find the minimunTable with the new created table
+        }
+    }
+
+    private boolean checkHopcroftTable(List<Map<T, List<Integer>>> table){ //check if per blok the rows are equal. if all rows per blok are equal return true. else return false
+        for(Map<T, List<Integer>> blok : table){
+            List<Integer> firstValues = new ArrayList<>();
+            for(Map.Entry<T, List<Integer>> entry : blok.entrySet()) {
+                if(firstValues.size() < 1){
+                    firstValues = entry.getValue();
+                } else {
+                    int counter = 0;
+                    for(Integer b : firstValues){
+                        if(!(b == entry.getValue().get(counter))){
+                            return false;
+                        }
+                        counter++;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     private Integer renameState(T state, Map<T, Integer> lookupTable){
         if(!lookupTable.containsKey(state)){
             //rename state
@@ -555,6 +721,28 @@ public class Automata<T extends Comparable>
             if(!paths.containsKey(s)){
                 getAndList((List<T>) s, a2, paths);
             }
+        }
+    }
+
+    public RegGram toRegGramm(){
+        if(!isDFA()){
+            RegGram regGram = new RegGram(alphabet);
+
+            for(T state : startStates){
+                regGram.defineAsStartState(state);
+            }
+
+            for(Transition<T> t : transitions){
+                if(finalStates.contains(t.getToState())){
+                    regGram.addTransition(new TransitionGram(t.getFromState(), t.getSymbol()));
+                } else {
+                    regGram.addTransition(new TransitionGram(t.getFromState(), t.getSymbol(), t.getToState()));
+                }
+            }
+
+            return regGram;
+        } else {
+          return DFAtoNDFA().toRegGramm();
         }
     }
 

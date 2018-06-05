@@ -4,6 +4,7 @@ import fileservice.FileIO;
 import regex.RegExp;
 import regex.TestRegExp;
 import regex.Thompson;
+import reggram.TestRegGram;
 
 import java.util.SortedSet;
 
@@ -18,12 +19,18 @@ public class main {
 //        testDFAtoNDFA();
 //        System.out.println("");
 
-        testToDFA();
-        testToDFAThompsons();
-        testDenial();
-        testAnd();
-        testRegExpEqual();
+//        testToDFA();
+//        testToDFAThompsons();
+//        testDenial();
+//        testAnd();
+//        testRegExpEqual();
+//        testHopcroft();
+
+//        TestRegGram.getRegGram2();
+        TestAutomata.ndfaToRegGram();
     }
+
+
 
     private static void testAcceptInput( Automata automata,String input) {
         boolean accept = automata.accept(input);
@@ -204,6 +211,33 @@ public class main {
         boolean result = r1.equals(r2);
 
         System.out.println("r1 == r2: " + result);
+    }
+
+    public static void testHopcroft(){
+        Automata ndfa = TestAutomata.testNDFATODFALESSON5();
+        ndfa.printTransitions();
+        System.out.println();
+        System.out.println(ndfa.getStartStates());
+        System.out.println(ndfa.getFinalStates());
+        System.out.println();
+
+        System.out.println("----------------");
+        System.out.println("     DFA    ");
+        Automata dfa = ndfa.NDFAtoDFA();
+        dfa.printTransitions();
+        System.out.println();
+        System.out.println(dfa.getStartStates());
+        System.out.println(dfa.getFinalStates());
+        System.out.println();
+
+        System.out.println("----------------");
+        System.out.println("    Hopcroft    ");
+        Automata simpleDfa = dfa.hopcroft();
+        simpleDfa.printTransitions();
+        System.out.println();
+        System.out.println(simpleDfa.getStartStates());
+        System.out.println(simpleDfa.getFinalStates());
+        System.out.println();
     }
 
 
