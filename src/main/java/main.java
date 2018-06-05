@@ -6,6 +6,7 @@ import regex.TestRegExp;
 import regex.Thompson;
 import reggram.TestRegGram;
 
+import java.nio.file.Paths;
 import java.util.SortedSet;
 
 public class main {
@@ -28,6 +29,12 @@ public class main {
 
 //        TestRegGram.getRegGram2();
         TestAutomata.ndfaToRegGram();
+            FileIO.readRegexFromFile(Paths.get("./input/regexes.txt"));
+//        testToDFA();
+//        testToDFAThompsons();
+//        testDenial();
+//        testAnd();
+//        testRegExpEqual();
     }
 
 

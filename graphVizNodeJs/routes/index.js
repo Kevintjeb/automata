@@ -24,9 +24,9 @@ router.post('/graph', (req, res, next) => {
 
     file.mv(`./files/${file.name}`, (error) => {
         if (error)
-            return res.status(500).send('nope.');
+            return res.status(500).send('nope.' + error);
 
-        exec(`./graphviz/Graphviz2.38/bin/dot.exe -Tpng png -O ${uuid}.png ./files/${file.name}`, (err, stdout, stderr) => {
+        exec(`dot -Tpng png -O ${uuid}.png ./files/${file.name}`, (err, stdout, stderr) => {
             const filepath = `./files/${file.name}.png`;
 
             console.log(stdout);

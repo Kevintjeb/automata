@@ -10,6 +10,12 @@ COPY package*.json ./
 
 RUN npm install
 
+RUN apt update
+RUN apt install --yes graphviz
+
+
+RUN mkdir /app/files
+
 # Bundle app source
 COPY . .
 

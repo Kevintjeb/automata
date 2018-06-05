@@ -16,8 +16,6 @@ import java.util.*;
  */
 
 public class Thompson {
-    private Stack<Automata> automataStack = new Stack<>();
-
     Map<Automata, Integer> automatasPerLayer = new LinkedHashMap<>();
 
     public Thompson() {
