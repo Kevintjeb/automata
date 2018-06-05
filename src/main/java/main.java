@@ -5,6 +5,7 @@ import regex.RegExp;
 import regex.TestRegExp;
 import regex.Thompson;
 
+import java.nio.file.Paths;
 import java.util.SortedSet;
 
 public class main {
@@ -17,12 +18,12 @@ public class main {
 //        System.out.println("TEST DFA TO NDFA");
 //        testDFAtoNDFA();
 //        System.out.println("");
-
-        testToDFA();
-        testToDFAThompsons();
-        testDenial();
-        testAnd();
-        testRegExpEqual();
+            FileIO.readRegexFromFile(Paths.get("./input/regexes.txt"));
+//        testToDFA();
+//        testToDFAThompsons();
+//        testDenial();
+//        testAnd();
+//        testRegExpEqual();
     }
 
     private static void testAcceptInput( Automata automata,String input) {

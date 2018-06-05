@@ -17,7 +17,7 @@ public class RegExp
     
     // De mogelijke operatoren voor een reguliere expressie (+, *, |, .) 
     // Daarnaast ook een operator definitie voor 1 keer repeteren (default)
-    public enum Operator { PLUS, STAR, OR, DOT, ONE}
+    public enum Operator { PLUS, STAR, OR, DOT, ONE, LEFTPARENTHESES, RIGHTPARENTHESES}
     
     RegExp left;
     RegExp right;
@@ -38,7 +38,7 @@ public class RegExp
         left = null;
         right = null;
     }
-    
+
     public RegExp(String p)
     {
         operator = Operator.ONE;
@@ -46,7 +46,15 @@ public class RegExp
         left = null;
         right = null;
     }
-    
+
+    public RegExp(char p)
+    {
+        operator = Operator.ONE;
+        terminals = String.valueOf(p);
+        left = null;
+        right = null;
+    }
+
     public RegExp plus()
     {
         RegExp result = new RegExp();
@@ -135,10 +143,6 @@ public class RegExp
                 
             
         return languageResult;
-    }
-
-    public Automata toAutomata() {
-        return new Automata<>();
     }
 
     public boolean equals(RegExp r2){
