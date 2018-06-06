@@ -78,3 +78,6 @@ graphVizNodeJs/node_modules
 graphVizNodeJs/files
 
 *.iml
+
+
+output/
