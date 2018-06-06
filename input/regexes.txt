@@ -1,8 +1,1 @@
-a
-aa
-ab
-a*
-aa*
-ab+a
-a(b*a)a+
-(a+b*)+
+(a|ba+)+|(ab)*

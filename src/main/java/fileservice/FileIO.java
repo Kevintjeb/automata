@@ -11,12 +11,17 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
+
+
 public class FileIO {
+
     private static String BASE_PATH = "output/";
     private static String SERVER_URL = "http://vpn.kevinvandenbroek.nl:3001/graph";
     private static List<Character> OPERANDS = Arrays.asList('|', '(','.');
+    private static List<Character> SINGLE_EFFECT_OPERANDS = Arrays.asList('+','*');
     private static List<Character> OPERANDS_WITH_DOT = Arrays.asList(')', '*', '+');
     private static List<Character> OPERANDS_NO_PARENTHESIS = Arrays.asList('*', '+', '.', '|');
+
     public static void writeToFile(Automata automata) {
         Path automataDot = Paths.get(BASE_PATH + "automataDot.dot");
 
@@ -156,7 +161,7 @@ public class FileIO {
                 for (int j = 0; j < chars.length; j++) {
                     if (isOperator(chars[j])) {
                         tokens.get(i).add(chars[j]);
-                        if ((j > 0 && j != chars.length - 1) && (isOpeningParenthesis(chars[j + 1]))){
+                        if ((j > 0 && j != chars.length - 1) && (isOpeningParenthesis(chars[j + 1])) && !isOrOperator(chars[j])){
                             tokens.get(i).add('.');
                         }
                     } else {
@@ -182,28 +187,27 @@ public class FileIO {
 
                 for (Character token : tokenList) {
                     if (isOperatorNoParenthesis(token)) {
-                        if(token.equals('*')){
+
+                        if(isSingleEffectToken(token)){
                             operators.push(token);
                             processOperator(operators, operands);
                             continue;
                         }
+
                         while (!operators.isEmpty() && isOperatorNoParenthesis(operators.peek()) ) {
                             processOperator(operators, operands);
                         }
-                        System.out.println("PUSHING " + token + " on operator stack");
+
                         operators.push(token);
                     } else if (isOpeningParenthesis(token)) {
-                        System.out.println("PUSHING " + token + " on operator stack");
                         operators.push(token);
                     } else if (isClosingParenthesis(token)) {
 
                         while (!isOpeningParenthesis(operators.peek()))
                             processOperator(operators, operands);
 
-                        System.out.println("popping" + operators.peek()+ " from operator stack");
                         operators.pop();
                     } else {
-                        System.out.println("PUSHING " + token + " on operands stack");
                         operands.push(new RegExp(token));
                     }
                 }
@@ -219,12 +223,31 @@ public class FileIO {
             Thompson thompson = new Thompson();
 
 
-            regexps.forEach(regExp ->  writeToFile(thompson.parseAutomata(regExp).brzozowski()));
+            for (RegExp regexp : regexps){
+                Automata automata = thompson.parseAutomata(regexp);
+                automata.printInfo();
+
+                Automata automata1 = automata.NDFAtoDFA();
+
+                automata1.printInfo();
+
+
+                FileIO.writeToFile(automata);
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return Collections.EMPTY_LIST;
+    }
+
+    public static boolean isOrOperator(Character token) {
+        return token.equals('|');
+    }
+
+    private static boolean isSingleEffectToken(Character token) {
+        return SINGLE_EFFECT_OPERANDS.contains(token);
     }
 
     private static boolean isOperatorNoParenthesis(Character token) {
@@ -253,6 +276,10 @@ public class FileIO {
                 operands.push(operands.pop().plus());
                 break;
             case '|':
+                RegExp leftOr = operands.pop();
+                RegExp rightOr = operands.pop();
+
+                operands.push(rightOr.or(leftOr));
                 break;
             case '.':
                 RegExp left = operands.pop();
