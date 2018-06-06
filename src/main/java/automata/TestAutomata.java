@@ -82,7 +82,7 @@ public class TestAutomata
         return m;
     }
 
-    public static Automata<String> getDFAstartAbbOrEndBaaB(){
+    public static Automata<String> DFA_1(){
         Character [] alphabet = {'a', 'b'};
         Automata<String> m = new Automata<String>(alphabet);
 
@@ -219,7 +219,7 @@ public class TestAutomata
         return m;
     }
 
-    static public Automata<Integer> testNDFATODFALESSON5(){
+    static public Automata<Integer> NDFA_1(){
         Character[] alphabet = {'a', 'b'};
         Automata<Integer> a = new Automata<>(alphabet);
 
@@ -247,7 +247,7 @@ public class TestAutomata
         return a;
     }
 
-    static public Automata<Integer> testNDFATODFALESSON5_1(){
+    static public Automata<Integer> NDFA_2(){
         Character[] alphabet = {'a', 'b'};
         Automata<Integer> a = new Automata<>(alphabet);
 
@@ -268,7 +268,7 @@ public class TestAutomata
         return a;
     }
 
-    static public Automata<Integer> testNDFATODFALESSON5_2(){
+    static public Automata<Integer> NDFA_3(){
         Character[] alphabet = {'a', 'b'};
         Automata<Integer> a = new Automata<>(alphabet);
 
@@ -302,7 +302,7 @@ public class TestAutomata
         return a;
     }
 
-    static public Automata<Integer> L1(){
+    static public Automata<Integer> DFA_2(){
         Character[] alphabet = {'a', 'b'};
         Automata<Integer> a = new Automata<>(alphabet);
 
@@ -319,7 +319,7 @@ public class TestAutomata
         return a;
     }
 
-    static public Automata<Integer> L2(){
+    static public Automata<Integer> DFA_3(){
         Character[] alphabet = {'a', 'b'};
         Automata<Integer> a = new Automata<>(alphabet);
 

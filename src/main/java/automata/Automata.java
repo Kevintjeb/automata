@@ -9,6 +9,9 @@ package automata;
  * @version 1.0
  */
 
+import fileservice.FileIO;
+import regex.RegExp;
+import regex.Thompson;
 import reggram.RegGram;
 import reggram.TransitionGram;
 
@@ -44,6 +47,56 @@ public class Automata<T extends Comparable>
         startStates = new TreeSet<T>();
         finalStates = new TreeSet<T>();
         this.setAlphabet(alphabet);
+    }
+
+
+    public static Automata STARTS_WITH(String pattern){
+        return createAutomata(pattern, addEverythingPossible(pattern));
+    }
+
+    private static Automata createAutomata(String pattern, String s) {
+        String regex = pattern + s;
+
+        RegExp regExp = FileIO.readRegexFromString(regex);
+
+        Thompson thompson = new Thompson();
+
+        Automata automata = thompson.parseAutomata(regExp);
+
+        return automata.NDFAtoDFA();
+    }
+
+    public static Automata ENDS_WITH(String pattern){
+        return createAutomata(addEverythingPossible(pattern), pattern);
+    };
+
+    public static Automata CONTAINS(String pattern){
+        String regex = addEverythingPossible(pattern);
+
+        regex += pattern;
+        regex += addEverythingPossible(pattern);
+
+        RegExp regExp = FileIO.readRegexFromString(regex);
+
+        Thompson thompson = new Thompson();
+
+        Automata automata = thompson.parseAutomata(regExp);
+
+        return automata.NDFAtoDFA();
+    };
+
+    public static String addEverythingPossible(String pattern) {
+
+        char[] chars = pattern.toCharArray();
+        String regex =  "(";
+
+        for (char c : chars){
+            regex += c + "*";
+        }
+
+        regex += ")*";
+
+        return regex;
     }
 
     public T getLastFromStates(){

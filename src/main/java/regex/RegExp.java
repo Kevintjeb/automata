@@ -167,6 +167,15 @@ public class RegExp {
             return false;
     }
 
+    public SortedSet getAcceptedWords() {
+        Thompson thompson = new Thompson();
+        Automata automata = thompson.parseAutomata(this).NDFAtoDFA();
+
+        return this.getLanguage(automata.getStates().size());
+
+    }
+
+
     public Operator getOperator() {
         return operator;
     }

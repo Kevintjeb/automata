@@ -10,15 +10,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 
 public class FileIO {
 
     private static String BASE_PATH = "output/";
     private static String SERVER_URL = "http://vpn.kevinvandenbroek.nl:3001/graph";
-    private static List<Character> OPERANDS = Arrays.asList('|', '(','.');
-    private static List<Character> SINGLE_EFFECT_OPERANDS = Arrays.asList('+','*');
+    private static List<Character> OPERANDS = Arrays.asList('|', '(', '.');
+    private static List<Character> SINGLE_EFFECT_OPERANDS = Arrays.asList('+', '*');
     private static List<Character> OPERANDS_WITH_DOT = Arrays.asList(')', '*', '+');
     private static List<Character> OPERANDS_NO_PARENTHESIS = Arrays.asList('*', '+', '.', '|');
 
@@ -120,6 +120,105 @@ public class FileIO {
         return startNode2;
     }
 
+    public static List<RegExp> readRegexFromFile(Path filepath) {
+        try {
+            //Each line is ONE regexp
+            List<String> lines = Files.readAllLines(filepath);
+
+            List<RegExp> regexps = lines.stream().map(FileIO::readRegexFromString).collect(Collectors.toList());
+
+            return regexps;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Collections.EMPTY_LIST;
+    }
+
+    public static RegExp readRegexFromString(String regex) {
+        final List<Character> tokens = new ArrayList<>();
+
+        char[] chars = regex.toCharArray();
+        for (int j = 0; j < chars.length; j++) {
+            if (isOperator(chars[j])) {
+                tokens.add(chars[j]);
+                if ((j > 0 && j != chars.length - 1) && (isOpeningParenthesis(chars[j + 1])) && !isOrOperator(chars[j])) {
+                    tokens.add('.');
+                }
+            } else {
+                if ((j > 0) && (OPERANDS_WITH_DOT.contains(chars[j - 1]) || !isOperator(chars[j - 1]))) {
+                    tokens.add('.');
+                }
+
+                tokens.add(chars[j]);
+                if((j != chars.length -1) && isOpeningParenthesis(chars[j + 1])){
+                    tokens.add('.');
+                }
+            }
+        }
+
+        System.out.println("---------------------");
+        System.out.println("regex : " + regex);
+        System.out.println("---------------------");
+        System.out.println("tokens : " + tokens);
+        System.out.println("---------------------");
+
+        List<RegExp> regexps = new ArrayList<>();
+
+        Stack<Character> operators = new Stack<>();
+        Stack<RegExp> operands = new Stack<>();
+
+        for (Character token : tokens) {
+            if (isOperatorNoParenthesis(token)) {
+
+                if (isSingleEffectToken(token)) {
+                    operators.push(token);
+                    processOperator(operators, operands);
+                    continue;
+                }
+
+                while (!operators.isEmpty() && isOperatorNoParenthesis(operators.peek())) {
+                    processOperator(operators, operands);
+                }
+
+                operators.push(token);
+            } else if (isOpeningParenthesis(token)) {
+                operators.push(token);
+            } else if (isClosingParenthesis(token)) {
+
+                while (!isOpeningParenthesis(operators.peek()))
+                    processOperator(operators, operands);
+
+                operators.pop();
+            } else {
+                operands.push(new RegExp(token));
+            }
+        }
+
+        while (!operators.isEmpty()) {
+            processOperator(operators, operands);
+        }
+
+        regexps.add(operands.pop());
+
+
+        Thompson thompson = new Thompson();
+
+
+        Automata automata = thompson.parseAutomata(regexps.get(0));
+        automata.printInfo();
+
+        Automata automata1 = automata.NDFAtoDFA();
+
+        automata1.printInfo();
+
+        FileIO.writeToFile(automata);
+
+
+        return regexps.get(0);
+
+    }
+
     private static void write(Path path, String text) {
         try {
             Files.write(path, text.getBytes(), StandardOpenOption.APPEND);
@@ -148,100 +247,6 @@ public class FileIO {
         System.out.println();
     }
 
-    public static List<RegExp> readRegexFromFile(Path filepath) {
-        try {
-            //Each line is ONE regexp
-            List<String> lines = Files.readAllLines(filepath);
-            final List<List<Character>> tokens = new ArrayList<>();
-
-            for (int i = 0; i < lines.size(); i++) {
-                tokens.add(new ArrayList<>());
-                String line = lines.get(i);
-                char[] chars = line.toCharArray();
-                for (int j = 0; j < chars.length; j++) {
-                    if (isOperator(chars[j])) {
-                        tokens.get(i).add(chars[j]);
-                        if ((j > 0 && j != chars.length - 1) && (isOpeningParenthesis(chars[j + 1])) && !isOrOperator(chars[j])){
-                            tokens.get(i).add('.');
-                        }
-                    } else {
-                        if ((j > 0) && (OPERANDS_WITH_DOT.contains(chars[j - 1]) || !isOperator(chars[j - 1]))) {
-                            tokens.get(i).add('.');
-                        }
-                        tokens.get(i).add(chars[j]);
-                    }
-                }
-
-                System.out.println("---------------------");
-                System.out.println("regex : " + line);
-                System.out.println("---------------------");
-                System.out.println("tokens : " + tokens.get(i));
-                System.out.println("---------------------");
-            }
-
-            List<RegExp> regexps = new ArrayList<>();
-
-            for (List<Character> tokenList : tokens) {
-                Stack<Character> operators = new Stack<>();
-                Stack<RegExp> operands = new Stack<>();
-
-                for (Character token : tokenList) {
-                    if (isOperatorNoParenthesis(token)) {
-
-                        if(isSingleEffectToken(token)){
-                            operators.push(token);
-                            processOperator(operators, operands);
-                            continue;
-                        }
-
-                        while (!operators.isEmpty() && isOperatorNoParenthesis(operators.peek()) ) {
-                            processOperator(operators, operands);
-                        }
-
-                        operators.push(token);
-                    } else if (isOpeningParenthesis(token)) {
-                        operators.push(token);
-                    } else if (isClosingParenthesis(token)) {
-
-                        while (!isOpeningParenthesis(operators.peek()))
-                            processOperator(operators, operands);
-
-                        operators.pop();
-                    } else {
-                        operands.push(new RegExp(token));
-                    }
-                }
-
-                while(!operators.isEmpty()){
-                    processOperator(operators, operands);
-                }
-
-                regexps.add(operands.pop());
-            }
-
-
-            Thompson thompson = new Thompson();
-
-
-            for (RegExp regexp : regexps){
-                Automata automata = thompson.parseAutomata(regexp);
-                automata.printInfo();
-
-                Automata automata1 = automata.NDFAtoDFA();
-
-                automata1.printInfo();
-
-
-                FileIO.writeToFile(automata);
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Collections.EMPTY_LIST;
-    }
-
     public static boolean isOrOperator(Character token) {
         return token.equals('|');
     }
@@ -268,7 +273,7 @@ public class FileIO {
         Character operator = operators.pop();
         System.out.println("processing " + operator);
 
-        switch(operator){
+        switch (operator) {
             case '*':
                 operands.push(operands.pop().star());
                 break;
