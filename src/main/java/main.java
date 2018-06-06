@@ -28,13 +28,16 @@ public class main {
 //        testHopcroft();
 
 //        TestRegGram.getRegGram2();
-        TestAutomata.ndfaToRegGram();
+//        TestAutomata.ndfaToRegGram();
             FileIO.readRegexFromFile(Paths.get("./input/regexes.txt"));
 //        testToDFA();
 //        testToDFAThompsons();
 //        testDenial();
 //        testAnd();
 //        testRegExpEqual();
+
+//        TestRegExp.testAplusB();
+
     }
 
 

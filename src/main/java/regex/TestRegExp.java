@@ -1,5 +1,7 @@
 package regex;
 
+import fileservice.FileIO;
+
 /**
  * Write a description of class TestRegExp here.
  *
@@ -32,6 +34,23 @@ public class TestRegExp
         // expr5: "(baa | baa)+ (a|b)*"
         expr5 = expr4.dot(all);
     }
+
+    public static void testAplusB() {
+        RegExp regExpa = new RegExp("a");
+        RegExp regExpb = new RegExp("b");
+
+        RegExp plus = regExpa.plus();
+        RegExp star = regExpb.star();
+        RegExp dot = plus.dot(star);
+
+        Thompson thompson = new Thompson();
+
+        FileIO.writeToFile(thompson.parseAutomata(dot).brzozowski());
+
+
+
+    }
+
     
     public void testLanguage()
     {

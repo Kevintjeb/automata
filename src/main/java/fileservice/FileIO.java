@@ -14,8 +14,9 @@ import java.util.*;
 public class FileIO {
     private static String BASE_PATH = "output/";
     private static String SERVER_URL = "http://vpn.kevinvandenbroek.nl:3001/graph";
-    private static List<Character> OPERANDS = Arrays.asList('|', '(');
+    private static List<Character> OPERANDS = Arrays.asList('|', '(','.');
     private static List<Character> OPERANDS_WITH_DOT = Arrays.asList(')', '*', '+');
+    private static List<Character> OPERANDS_NO_PARENTHESIS = Arrays.asList('*', '+', '.', '|');
     public static void writeToFile(Automata automata) {
         Path automataDot = Paths.get(BASE_PATH + "automataDot.dot");
 
@@ -28,6 +29,7 @@ public class FileIO {
             SortedSet<?> startStates = automata.getStartStates();
             SortedSet<?> states = automata.getStates();
             Set<?> allTransitions = automata.getAllTransitions();
+            SortedSet<?> finalStates = automata.getFinalStates();
 
             write(automataDot, "digraph g {\n\nrankdir=LR; \n\nNOTHING [label=\"\", shape=none];\n");
 
@@ -62,6 +64,16 @@ public class FileIO {
                 }
             });
 
+            finalStates.forEach(o -> {
+                try {
+                    String text = getFormatForEndState(o.toString());
+                    Files.write(automataDot, text.getBytes(), StandardOpenOption.APPEND);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+
             write(automataDot, "\n}");
         } catch (FileAlreadyExistsException x) {
             System.err.format("file named %s" +
@@ -80,6 +92,12 @@ public class FileIO {
 
     private static String getFormatForTransition(Comparable from, Comparable to, char label) {
         return String.format("\"%s\" -> \"%s\" [ label = \"%s\" ]; \n\n", from, to, label);
+    }
+
+    private static String getFormatForEndState(Comparable<String> endState) {
+
+        //, peripheries=2, style=filled, color=yellowgreen]
+        return String.format("\"%s\" [ peripheries=2, style=filled, color=yellowgreen ]", endState);
     }
 
     private static void clearFile(Path automataDot) throws IOException {
@@ -129,81 +147,79 @@ public class FileIO {
         try {
             //Each line is ONE regexp
             List<String> lines = Files.readAllLines(filepath);
-            final List<Stack<RegExp.Operator>> operands = new ArrayList<>();
-            final List<List<Character>> terminals = new ArrayList<>();
-            Stack<Character> regexStack = new Stack<>();
+            final List<List<Character>> tokens = new ArrayList<>();
 
             for (int i = 0; i < lines.size(); i++) {
-                operands.add(new Stack<>());
-                terminals.add(new ArrayList<>());
+                tokens.add(new ArrayList<>());
                 String line = lines.get(i);
                 char[] chars = line.toCharArray();
                 for (int j = 0; j < chars.length; j++) {
-                    if (isOperand(chars[j])){
-                        regexStack.push(chars[j]);
-                        operands.get(i).push(getOperator(chars[j]));
-                    }
-                    else {
-                        if ((j > 0) && (OPERANDS_WITH_DOT.contains(chars[j-1]) || !isOperand(chars[j-1])) ) {
-                            regexStack.push('.');
-                            operands.get(i).push(RegExp.Operator.DOT);
+                    if (isOperator(chars[j])) {
+                        tokens.get(i).add(chars[j]);
+                        if ((j > 0 && j != chars.length - 1) && (isOpeningParenthesis(chars[j + 1]))){
+                            tokens.get(i).add('.');
                         }
-                        terminals.get(i).add(chars[j]);
-                        regexStack.push(chars[j]);
+                    } else {
+                        if ((j > 0) && (OPERANDS_WITH_DOT.contains(chars[j - 1]) || !isOperator(chars[j - 1]))) {
+                            tokens.get(i).add('.');
+                        }
+                        tokens.get(i).add(chars[j]);
                     }
-
                 }
 
                 System.out.println("---------------------");
-                System.out.println("regex : "+ line);
-                System.out.println("regex-stack : "+ regexStack);
+                System.out.println("regex : " + line);
                 System.out.println("---------------------");
-                System.out.println("regex-operands : " + operands.get(i));
-                System.out.println("regex-terminals : " + terminals.get(i));
+                System.out.println("tokens : " + tokens.get(i));
                 System.out.println("---------------------");
             }
 
+            List<RegExp> regexps = new ArrayList<>();
 
-            Stack<RegExp.Operator> operandsRegex = operands.get(0);
+            for (List<Character> tokenList : tokens) {
+                Stack<Character> operators = new Stack<>();
+                Stack<RegExp> operands = new Stack<>();
 
-            Stack<RegExp.Operator> operandsRegexCopy = (Stack<RegExp.Operator>) operandsRegex.clone();
+                for (Character token : tokenList) {
+                    if (isOperatorNoParenthesis(token)) {
+                        if(token.equals('*')){
+                            operators.push(token);
+                            processOperator(operators, operands);
+                            continue;
+                        }
+                        while (!operators.isEmpty() && isOperatorNoParenthesis(operators.peek()) ) {
+                            processOperator(operators, operands);
+                        }
+                        System.out.println("PUSHING " + token + " on operator stack");
+                        operators.push(token);
+                    } else if (isOpeningParenthesis(token)) {
+                        System.out.println("PUSHING " + token + " on operator stack");
+                        operators.push(token);
+                    } else if (isClosingParenthesis(token)) {
 
-            operandsRegex.push(RegExp.Operator.STAR);
+                        while (!isOpeningParenthesis(operators.peek()))
+                            processOperator(operators, operands);
 
-            List<Character> charactersRegex = terminals.get(0);
-
-            Stack<RegExp> regexps = new Stack<>();
-
-            charactersRegex.stream()
-                    .map(RegExp::new)
-                    .forEach(regexps::push);
-
-            while(operandsRegexCopy.size() > 0){
-                RegExp.Operator operator = operandsRegexCopy.pop();
-                switch (operator){
-                    case PLUS:
-                        RegExp regexPlus = regexps.pop();
-                        regexps.push(regexPlus.plus());
-                        break;
-                    case STAR:
-                        RegExp regexStart = regexps.pop();
-                        regexps.push(regexStart.star());
-                        break;
-                    case DOT:
-                        RegExp regexLeftDot = regexps.pop();
-                        RegExp regexRightDot = regexps.pop();
-                        regexps.push(regexRightDot.dot(regexLeftDot));
-                        break;
-                    case LEFTPARENTHESES:
-                        break;
-                    case RIGHTPARENTHESES:
-                        break;
+                        System.out.println("popping" + operators.peek()+ " from operator stack");
+                        operators.pop();
+                    } else {
+                        System.out.println("PUSHING " + token + " on operands stack");
+                        operands.push(new RegExp(token));
+                    }
                 }
+
+                while(!operators.isEmpty()){
+                    processOperator(operators, operands);
+                }
+
+                regexps.add(operands.pop());
             }
+
 
             Thompson thompson = new Thompson();
 
-            writeToFile(thompson.parseAutomata(regexps.get(0)));
+
+            regexps.forEach(regExp ->  writeToFile(thompson.parseAutomata(regExp).brzozowski()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -211,7 +227,44 @@ public class FileIO {
         return Collections.EMPTY_LIST;
     }
 
-    private static boolean isOperand(char aChar) {
+    private static boolean isOperatorNoParenthesis(Character token) {
+        return OPERANDS_NO_PARENTHESIS.contains(token);
+    }
+
+
+    private static boolean isOpeningParenthesis(Character token) {
+        return token.equals('(');
+    }
+
+    private static boolean isClosingParenthesis(Character token) {
+        return token.equals(')');
+    }
+
+    private static void processOperator(Stack<Character> operators, Stack<RegExp> operands) {
+
+        Character operator = operators.pop();
+        System.out.println("processing " + operator);
+
+        switch(operator){
+            case '*':
+                operands.push(operands.pop().star());
+                break;
+            case '+':
+                operands.push(operands.pop().plus());
+                break;
+            case '|':
+                break;
+            case '.':
+                RegExp left = operands.pop();
+                RegExp right = operands.pop();
+
+                operands.push(right.dot(left));
+                break;
+        }
+    }
+
+
+    private static boolean isOperator(char aChar) {
         return OPERANDS.contains(aChar) || OPERANDS_WITH_DOT.contains(aChar);
     }
 
