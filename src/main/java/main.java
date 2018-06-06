@@ -1,7 +1,15 @@
 import automata.Automata;
 import automata.TestAutomata;
+import fileservice.FileIO;
+import regex.RegExp;
+import regex.TestRegExp;
+import regex.Thompson;
+import reggram.TestRegGram;
 
+import javax.swing.*;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class main {
 
@@ -56,13 +64,10 @@ public class main {
             System.out.println(" OPDRACHT 8         -        Graphviz koppeling");
             OPDRACHT_8();
             System.in.read();
-            System.out.println(" OPDRACHT 9 A       -        NDFA -> Grammatica");
+            System.out.println(" OPDRACHT 9 A, B    -        NDFA -> Grammatica, Grammatica -> NDFA");
             OPDRACHT_9_A();
             System.in.read();
-            System.out.println(" OPDRACHT 9 B       -        Grammatica -> NDFA");
-            OPDRACHT_9_B();
-            System.in.read();
-
+            System.out.println();
             System.out.println("-----------------------------------------------------");
         } catch (IOException e) {
             e.printStackTrace();
@@ -71,57 +76,121 @@ public class main {
 
     private static void OPDRACHT_9_A() {
         //gram -> ndfa, testreggram1,2
-    }
-
-    private static void OPDRACHT_9_B() {
         //NDFA -> gram, TestRegGram1,2
+        TestRegGram.getRegGram1();
+        TestRegGram.getRegGram2();
     }
 
     private static void OPDRACHT_8() {
         //Graphviz
+        System.out.println("Alle verschillende opdrachten hebben een graphviz integratie gebruikt.");
+        System.out.println("In de folder output zijn alle graphviz afbeeldingen te vinden.");
     }
 
     private static void OPDRACHT_7() {
         //Gelijkheid regexes.
 
         //RegexEqual1, RegexEqual2
+
+        RegExp regExp = TestRegExp.regexEqual1();
+        RegExp regExp1 = TestRegExp.regexEqual2();
+        boolean equals = regExp.equals(regExp1);
+        if (equals) {
+            System.out.println("-------------------");
+            System.out.println("    EQUAL !      ");
+            System.out.println("-------------------");
+        } else {
+            System.out.println("-------------------");
+            System.out.println("    NOT EQUAL !      ");
+            System.out.println("-------------------");
+        }
     }
 
     private static void OPDRACHT_6_B() {
         //Minimalisatie via hopcroft
-
+        Thompson thompson = new Thompson();
+        RegExp regExp = TestRegExp.testAplusB();
+        Automata automata = thompson.parseAutomata(regExp).NDFAtoDFA().hopcroft();
+        automata.printInfo();
+        FileIO.writeToFile(automata);
     }
 
     private static void OPDRACHT_6_A() {
         //Minimalisatie via brzozoswki
+        Thompson thompson = new Thompson();
+        RegExp regExp = TestRegExp.testAplusB();
+        Automata automata = thompson.parseAutomata(regExp).NDFAtoDFA().brzozowski();
+
+        automata.printInfo();
+        FileIO.writeToFile(automata);
     }
 
     private static void OPDRACHT_5() {
         //Thompson construcite naar DFA
+        Thompson thompson = new Thompson();
+        RegExp regExp = TestRegExp.testAplusB();
+
+        Automata automata = thompson.parseAutomata(regExp).NDFAtoDFA();
+        automata.printInfo();
+        FileIO.writeToFile(automata);
     }
 
     private static void OPDRACHT_4() {
         //Thompson constructue, REGEX.
+        Thompson thompson = new Thompson();
+        RegExp regExp = TestRegExp.testAplusB();
+        Automata automata = thompson.parseAutomata(regExp);
+        automata.printInfo();
+        FileIO.writeToFile(automata);
     }
 
-    private static void OPDRACHT_3_B() {
+    private static void OPDRACHT_3_B() throws IOException {
         //AND, OR, DENIAL DFA (DFA2, DFA3)
+        Automata<Integer> automata2 = TestAutomata.DFA_2();
+        Automata<Integer> automata3 = TestAutomata.DFA_3();
+        System.out.println("AND :");
+        automata2.and(automata3).printInfo();
+        System.in.read();
+
+        System.out.println("OR :");
+        automata2.or(automata3).printInfo();
+        System.in.read();
+
+        System.out.println("DENIAL :");
+        automata2.denial().printInfo();
+        automata3.denial().printInfo();
+        System.in.read();
+
     }
 
-    private static void OPDRACHT_3_A() {
+    private static void OPDRACHT_3_A() throws IOException {
         //Constructor testen, begint ab etc.
+        System.out.println("Starts with ab: ");
+        Automata.STARTS_WITH("ab");
+        System.in.read();
+        System.out.println("Contains ab: ");
+        Automata.CONTAINS("ab");
+        System.in.read();
+        System.out.println("Ends with ab: ");
+        Automata.ENDS_WITH("ab");
+        System.in.read();
+        System.out.println();
     }
 
     private static void OPDRACHT_2_B() {
         //Woord wel geaccepteerd of niet
+        testAcceptInput(TestAutomata.DFA_1(), "ab");
+        testAcceptInput(TestAutomata.DFA_1(), "ababb");
     }
 
     private static void OPDRACHT_2_A() {
-        //lijst met geaccepteerde woorden.
+        RegExp regExp = TestRegExp.testAplusB();
+        System.out.println(regExp.getAcceptedWords());
+        System.out.println();
     }
 
     private static void OPDRACHT_1_B() {
-        //Regex parser
+        List<RegExp> regExps = FileIO.readRegexFromFile(Paths.get("./input/regexes.txt"));
     }
 
     private static void OPDRACHT_1_A() throws IOException {
@@ -139,13 +208,14 @@ public class main {
 
         System.out.println("Drie DFA's :");
         System.out.println(" DFA 1");
-        TestAutomata.DFA_1();
+        TestAutomata.DFA_1().printInfo();
         System.in.read();
         System.out.println(" DFA 2");
-        TestAutomata.DFA_2();
+        TestAutomata.DFA_2().printInfo();
         System.in.read();
         System.out.println(" DFA 3");
-        TestAutomata.DFA_3();
+        TestAutomata.DFA_3().printInfo();
+
     }
 
     private static void testAcceptInput(Automata automata, String input) {

@@ -1,4 +1,4 @@
-package fileservice;
+package fileservice ;
 
 import automata.Automata;
 import automata.Transition;
@@ -48,7 +48,6 @@ public class FileIO {
                     e.printStackTrace();
                 }
             });
-            Iterator iterator = allTransitions.iterator();
 
             allTransitions.forEach(transition -> {
                 try {
@@ -243,8 +242,9 @@ public class FileIO {
                 .build();
 
         Response response = client.newCall(request).execute();
-        Files.write(Paths.get("output/" + response.headers("Content-Disposition").get(0).substring(21)), response.body().bytes());
-        System.out.println();
+        String filename = response.headers("Content-Disposition").get(0).substring(21);
+        System.out.println("Writing to file with filename :\n" + filename);
+        Files.write(Paths.get("output/" + filename), response.body().bytes());
     }
 
     public static boolean isOrOperator(Character token) {

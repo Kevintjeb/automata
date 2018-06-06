@@ -35,7 +35,7 @@ public class TestRegExp
         expr5 = expr4.dot(all);
     }
 
-    public static void testAplusB() {
+    public static RegExp testAplusB() {
         RegExp regExpa = new RegExp("a");
         RegExp regExpb = new RegExp("b");
 
@@ -43,12 +43,8 @@ public class TestRegExp
         RegExp star = regExpb.star();
         RegExp dot = plus.dot(star);
 
-        Thompson thompson = new Thompson();
 
-        FileIO.writeToFile(thompson.parseAutomata(dot).brzozowski());
-
-
-
+        return dot;
     }
 
     
@@ -137,7 +133,7 @@ public class TestRegExp
         return dot3;
     }
 
-    public RegExp regexEqual1(){
+    public static RegExp regexEqual1(){
         //leftside of dot
         RegExp a = new RegExp("a");
         RegExp starA = a.star();
@@ -185,7 +181,7 @@ public class TestRegExp
 
     }
 
-    public RegExp regexEqual2(){
+    public static RegExp regexEqual2(){
         //left of dot
         RegExp a = new RegExp("a");
         RegExp b = new RegExp("b");
