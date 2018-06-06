@@ -76,3 +76,5 @@ fabric.properties
 
 graphVizNodeJs/node_modules
 graphVizNodeJs/files
+
+*.iml
