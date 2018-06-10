@@ -43,6 +43,7 @@ public class TestRegExp
         RegExp star = regExpb.star();
         RegExp dot = plus.dot(star);
 
+        //Regex = a+b*
 
         return dot;
     }

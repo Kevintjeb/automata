@@ -6,7 +6,6 @@ import regex.TestRegExp;
 import regex.Thompson;
 import reggram.TestRegGram;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -91,6 +90,7 @@ public class main {
         //Gelijkheid regexes.
 
         //RegexEqual1, RegexEqual2
+        System.out.println("Test equal regexEqual1 with regexEqual 2");
 
         RegExp regExp = TestRegExp.regexEqual1();
         RegExp regExp1 = TestRegExp.regexEqual2();
@@ -109,6 +109,7 @@ public class main {
     private static void OPDRACHT_6_B() {
         //Minimalisatie via hopcroft
         Thompson thompson = new Thompson();
+        System.out.println("used regExp a+b*");
         RegExp regExp = TestRegExp.testAplusB();
         Automata automata = thompson.parseAutomata(regExp).NDFAtoDFA().hopcroft();
         automata.printInfo();
@@ -118,6 +119,7 @@ public class main {
     private static void OPDRACHT_6_A() {
         //Minimalisatie via brzozoswki
         Thompson thompson = new Thompson();
+        System.out.println("used regExp a+b*");
         RegExp regExp = TestRegExp.testAplusB();
         Automata automata = thompson.parseAutomata(regExp).NDFAtoDFA().brzozowski();
 
@@ -128,6 +130,7 @@ public class main {
     private static void OPDRACHT_5() {
         //Thompson construcite naar DFA
         Thompson thompson = new Thompson();
+        System.out.println("used regExp a+b*");
         RegExp regExp = TestRegExp.testAplusB();
 
         Automata automata = thompson.parseAutomata(regExp).NDFAtoDFA();
@@ -139,6 +142,7 @@ public class main {
         //Thompson constructue, REGEX.
         Thompson thompson = new Thompson();
         RegExp regExp = TestRegExp.testAplusB();
+        System.out.println("used regExp a+b*");
         Automata automata = thompson.parseAutomata(regExp);
         automata.printInfo();
         FileIO.writeToFile(automata);
@@ -148,6 +152,7 @@ public class main {
         //AND, OR, DENIAL DFA (DFA2, DFA3)
         Automata<Integer> automata2 = TestAutomata.DFA_2();
         Automata<Integer> automata3 = TestAutomata.DFA_3();
+        System.out.println("Test with DFA 2 & DFA 3");
         System.out.println("AND :");
         automata2.and(automata3).printInfo();
         System.in.read();
@@ -157,7 +162,9 @@ public class main {
         System.in.read();
 
         System.out.println("DENIAL :");
+        System.out.println("Denial DFA 2");
         automata2.denial().printInfo();
+        System.out.println("Denial DFA 3");
         automata3.denial().printInfo();
         System.in.read();
 
@@ -179,12 +186,14 @@ public class main {
 
     private static void OPDRACHT_2_B() {
         //Woord wel geaccepteerd of niet
+        System.out.println("Test with DFA 1");
         testAcceptInput(TestAutomata.DFA_1(), "ab");
         testAcceptInput(TestAutomata.DFA_1(), "ababb");
     }
 
     private static void OPDRACHT_2_A() {
         RegExp regExp = TestRegExp.testAplusB();
+        System.out.println("test with regExp a+b*");
         System.out.println(regExp.getAcceptedWords());
         System.out.println();
     }
@@ -195,6 +204,7 @@ public class main {
 
     private static void OPDRACHT_1_A() throws IOException {
         System.out.println("Drie NDFA's :");
+
 
         System.out.println(" NDFA 1 ");
         TestAutomata.NDFA_1().printInfo();

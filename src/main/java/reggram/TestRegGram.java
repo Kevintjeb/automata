@@ -5,6 +5,7 @@ import automata.Transition;
 
 public class TestRegGram {
     static public RegGram<Integer> getRegGram1(){
+        System.out.println("------------------- Test RegGram 1 ---------------------------");
         Character[] alphabet = {'a', 'b'};
         RegGram<Integer> regGram = new RegGram<>(alphabet);
 
@@ -29,20 +30,24 @@ public class TestRegGram {
 
         regGram.defineAsStartState(0);
 
+        System.out.println("As regular grammar");
         regGram.printInfo();
 
         Automata ndfa = regGram.toNDFA();
 
+        System.out.println("As NDFA");
         ndfa.printInfo();
 
         RegGram regGram1 = ndfa.toRegGramm();
 
+        System.out.println("Back as regular grammer");
         regGram1.printInfo();
 
         return regGram;
     }
 
     static public RegGram<Integer> getRegGram2(){
+        System.out.println("------------------- Test RegGram 2 ---------------------------");
         Character[] alphabet = {'a', 'b'};
         RegGram<Integer> regGram = new RegGram<>(alphabet);
 
@@ -64,14 +69,17 @@ public class TestRegGram {
 
         regGram.defineAsStartState(0);
 
+        System.out.println("As regular grammar");
         regGram.printInfo();
 
         Automata ndfa = regGram.toNDFA();
 
+        System.out.println("As NDFA");
         ndfa.printInfo();
 
         RegGram regGram1 = ndfa.toRegGramm();
 
+        System.out.println("Back as regular grammer");
         regGram1.printInfo();
 
         return regGram;
